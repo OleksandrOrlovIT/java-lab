@@ -1,0 +1,86 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: GymDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: master
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d GymDB" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+        gym-network:
+          ipv4_address: 172.18.0.2
+    mem_limit: 1g
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      gym-network:
+        ipv4_address: 172.18.0.3
+    mem_limit: 1g
+
+  spring-boot-gym:
+    image: spring-gym
+    container_name: spring-boot-gym
+    environment:
+    - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=rootroot -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=rootroot"
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/GymDB
+    - SPRING_DATASOURCE_USERNAME=postgres
+    - SPRING_DATASOURCE_PASSWORD=master
+    - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "8443:8443"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/main/resources/myCertificate.jks:/app/resources/myCertificate.jks
+    networks:
+      gym-network:
+        ipv4_address: 172.18.0.5
+    mem_limit: 1g
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      gym-network:
+        ipv4_address: 172.18.0.10
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    mem_limit: 1g
+
+volumes:
+  postgres_data:
+
+networks:
+  gym-network:
+    external: true

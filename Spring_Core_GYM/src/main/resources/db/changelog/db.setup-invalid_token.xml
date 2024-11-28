@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+<changeSet author="shurl" id="create-invalid_token-table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="invalid_token"/>
+            </not>
+        </preConditions>
+        <createTable tableName="invalid_token">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="invalid_token_pkey"/>
+            </column>
+            <column name="token" type="VARCHAR(512)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="blacklisted_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

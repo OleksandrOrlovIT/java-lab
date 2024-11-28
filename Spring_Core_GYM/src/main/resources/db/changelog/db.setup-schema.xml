@@ -1,0 +1,214 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="shurl (generated)" id="1728380065596-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="training_type"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training_type">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="training_type_pkey"/>
+            </column>
+            <column name="training_type_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="gym_user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="gym_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="gym_user_pkey"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="training_type" constraintName="uk282vkdpqvvowr84vxkw9ir6ad"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="training_type_name" constraintName="uk282vkdpqvvowr84vxkw9ir6ad" tableName="training_type"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="gym_user" constraintName="ukqu9o956ydjdj419gdk97ligll"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="username" constraintName="ukqu9o956ydjdj419gdk97ligll" tableName="gym_user"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="trainee"/>
+            </not>
+        </preConditions>
+        <createTable tableName="trainee">
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="date_of_birth" type="date"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="trainee_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-6">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="trainer"/>
+            </not>
+        </preConditions>
+        <createTable tableName="trainer">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="trainer_pkey"/>
+            </column>
+            <column name="training_type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-7">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="trainer_trainee"/>
+            </not>
+        </preConditions>
+        <createTable tableName="trainer_trainee">
+            <column name="trainer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-8">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="training"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="training_pkey"/>
+            </column>
+            <column name="training_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="training_duration" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="training_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="training_type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-9">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="trainer" constraintName="fk64g6ixj3yj75yl5txqa8he01k"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="trainer" constraintName="fk64g6ixj3yj75yl5txqa8he01k" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="gym_user" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-10">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="training" constraintName="fk7nior8x5718iqu50ixrhbphkn"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="trainer_id" baseTableName="training" constraintName="fk7nior8x5718iqu50ixrhbphkn" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="trainer" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-11">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="trainer_trainee" constraintName="fkbcqfwqg624fdo15lvyin8nin5"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="trainee_id" baseTableName="trainer_trainee" constraintName="fkbcqfwqg624fdo15lvyin8nin5" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="trainee" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-12">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="trainee" constraintName="fkdkxr9g2dnwit2ea5fy8vnwu"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="trainee" constraintName="fkdkxr9g2dnwit2ea5fy8vnwu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="gym_user" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-13">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="training" constraintName="fkdo1ud9tn6ndbk4vlv0w59ace7"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="trainee_id" baseTableName="training" constraintName="fkdo1ud9tn6ndbk4vlv0w59ace7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="trainee" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-14">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="trainer" constraintName="fke783s0ahdh8ss6o20xdw970s"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="training_type_id" baseTableName="trainer" constraintName="fke783s0ahdh8ss6o20xdw970s" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="training_type" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-15">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="trainer_trainee" constraintName="fkgiwl9fwnhn8ts32sokx7lmp1v"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="trainer_id" baseTableName="trainer_trainee" constraintName="fkgiwl9fwnhn8ts32sokx7lmp1v" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="trainer" validate="true"/>
+    </changeSet>
+
+    <changeSet author="shurl (generated)" id="1728380065596-16">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="training" constraintName="fkjjkm0pmex365mb3cr5yv1eyqu"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="training_type_id" baseTableName="training" constraintName="fkjjkm0pmex365mb3cr5yv1eyqu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="training_type" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

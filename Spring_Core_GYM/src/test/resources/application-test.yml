@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-test.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    enable:
+      hikari: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+token:
+  signing:
+    key: 63B74F4E1D5F0B2C4A3F2E685F7A1C534D7E357E1D7F5C3B495C734B64327844
+
+max:
+  login:
+    attempt: 3
+
+logout:
+  duration:
+    minutes: 5
+
+expiration:
+  date:
+    milliseconds: 900000
+
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:myCertificate.jks
+    key-store-type: PKCS12
+    key-store-password: rootroot
+    trust-store: classpath:myCertificate.jks
+    trust-store-type: PKCS12
+    trust-store-password: rootroot
+  port: 8443
