@@ -1,4 +1,4 @@
-package ua.orlov.springcoregym.service.messages.impl;
+package ua.orlov.springcoregym.service.message.impl;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;

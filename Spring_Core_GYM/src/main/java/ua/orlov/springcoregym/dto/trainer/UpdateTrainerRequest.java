@@ -26,6 +26,5 @@ public class UpdateTrainerRequest {
 
     private Long specializationId;
 
-    @NotNull(message = "isActive is required.")
-    private Boolean isActive;
+    private boolean isActive;
 }

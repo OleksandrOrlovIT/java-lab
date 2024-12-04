@@ -9,6 +9,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ua.orlov.springcoregym.dto.user.UsernamePasswordUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class LoginComponent {
 
     private final CloseableHttpClient httpClient;
-
     private final ObjectMapper objectMapper;
+    private int port;
 
     public String loginAsUser(String username, String password) throws Exception {
         UsernamePasswordUser usernamePasswordUser = new UsernamePasswordUser();
@@ -28,7 +30,7 @@ public class LoginComponent {
         String json = objectMapper.writeValueAsString(usernamePasswordUser);
         StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
 
-        HttpPost post = new HttpPost("https://localhost:8443/api/v1/session");
+        HttpPost post = new HttpPost("https://localhost:" + port + "/api/v1/session");
         post.setEntity(entity);
 
         try (CloseableHttpResponse response = httpClient.execute(post)) {
@@ -47,7 +49,7 @@ public class LoginComponent {
         String json = objectMapper.writeValueAsString(usernamePasswordUser);
         StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
 
-        HttpPost post = new HttpPost("https://localhost:8443/api/v1/session");
+        HttpPost post = new HttpPost("https://localhost:" + port + "/api/v1/session");
         post.setEntity(entity);
 
         try (CloseableHttpResponse response = httpClient.execute(post)) {
@@ -55,3 +57,4 @@ public class LoginComponent {
         }
     }
 }
+

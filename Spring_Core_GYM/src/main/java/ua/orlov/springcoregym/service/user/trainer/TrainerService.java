@@ -17,7 +17,7 @@ public interface TrainerService {
      *
      * @param trainer the trainer entity to create
      * @return the created {@link Trainer} entity
-     * @throws java.lang.NullPointerException if required fields are null
+     * @throws NullPointerException if required fields are null
      */
     Trainer create(Trainer trainer);
 
@@ -42,7 +42,7 @@ public interface TrainerService {
      *
      * @param trainer the trainer entity to update
      * @return the updated {@link Trainer} entity
-     * @throws java.lang.IllegalArgumentException if the isActive field is changed during the update
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the isActive field is changed during the update
      */
     Trainer update(Trainer trainer);
 
@@ -52,7 +52,7 @@ public interface TrainerService {
      * @param username the trainer's username
      * @param password the trainer's password
      * @return true if the password matches, false otherwise
-     * @throws java.lang.IllegalArgumentException if no trainer is found with the provided username
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if no trainer is found with the provided username
      */
     boolean isUserNameMatchPassword(String username, String password);
 
@@ -62,7 +62,7 @@ public interface TrainerService {
      * @param trainer the trainer entity
      * @param newPassword the new password to set
      * @return the updated {@link Trainer} entity with the new password
-     * @throws java.lang.IllegalArgumentException if the current password is incorrect
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the current password is incorrect
      */
     Trainer changePassword(Trainer trainer, String newPassword);
 
@@ -71,7 +71,7 @@ public interface TrainerService {
      *
      * @param trainerId the ID of the trainer to activate
      * @return the activated {@link Trainer} entity
-     * @throws java.lang.IllegalArgumentException if the trainer is already active
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the trainer is already active
      */
     Trainer activateTrainer(Long trainerId);
 
@@ -80,7 +80,7 @@ public interface TrainerService {
      *
      * @param trainerId the ID of the trainer to deactivate
      * @return the deactivated {@link Trainer} entity
-     * @throws java.lang.IllegalArgumentException if the trainer is already deactivated
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the trainer is already deactivated
      */
     Trainer deactivateTrainer(Long trainerId);
 
@@ -100,7 +100,7 @@ public interface TrainerService {
      * @param traineeUsername the username of the trainee
      * @param pageable the paging information
      * @return a list of {@link Trainer} entities without the given trainee
-     * @throws java.lang.IllegalArgumentException if no trainee is found with the provided username
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if no trainee is found with the provided username
      */
     List<Trainer> getTrainersWithoutPassedTrainee(String traineeUsername, Pageable pageable);
 
@@ -110,7 +110,7 @@ public interface TrainerService {
      * @param userName the trainer's username
      * @param password the trainer's password
      * @return the authenticated {@link Trainer} entity
-     * @throws java.lang.IllegalArgumentException if the username or password is incorrect
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the username or password is incorrect
      */
     Trainer authenticateTrainer(String userName, String password);
 
@@ -119,7 +119,7 @@ public interface TrainerService {
      *
      * @param trainerUserName the username of the trainer
      * @return the found {@link Trainer} entity
-     * @throws java.lang.IllegalArgumentException if no trainer is found with the provided username
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if no trainer is found with the provided username
      */
     Trainer getByUsername(String trainerUserName);
 

@@ -12,17 +12,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TrainerWorkload {
 
-    private String username;
+    private String trainerUsername;
 
-    private String firstName;
+    private String trainerFirstName;
 
-    private String lastName;
+    private String trainerLastName;
 
-    private Boolean isActive;
+    private boolean trainerIsActive;
 
     private LocalDate trainingDate;
 
-    private Long trainingDuration;
+    private Integer trainingDurationMinutes;
 
     private ActionType actionType;
 

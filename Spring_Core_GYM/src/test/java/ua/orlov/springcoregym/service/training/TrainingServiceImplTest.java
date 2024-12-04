@@ -16,7 +16,7 @@ import ua.orlov.springcoregym.model.training.Training;
 import ua.orlov.springcoregym.model.training.TrainingType;
 import ua.orlov.springcoregym.model.user.Trainee;
 import ua.orlov.springcoregym.model.user.Trainer;
-import ua.orlov.springcoregym.service.messages.MessageSender;
+import ua.orlov.springcoregym.service.message.MessageSender;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -126,7 +126,7 @@ class TrainingServiceImplTest {
                 .trainingName("TRAINING NAME")
                 .trainingType(new TrainingType())
                 .trainingDate(LocalDate.MIN)
-                .trainingDuration(10L)
+                .trainingDurationMinutes(10)
                 .build();
 
         when(trainingDao.create(any())).thenReturn(training);

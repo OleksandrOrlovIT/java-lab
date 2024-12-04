@@ -26,7 +26,7 @@ public class TrainingMapper {
         response.setTrainingName(training.getTrainingName());
         response.setTrainingDate(training.getTrainingDate());
         response.setTrainingType(trainingTypeMapper.trainingTypeToTrainingTypeResponse(training.getTrainingType()));
-        response.setTrainingDuration(training.getTrainingDuration());
+        response.setTrainingDurationMinutes(training.getTrainingDurationMinutes());
         response.setTrainerName(training.getTrainer().getUsername());
         return response;
     }
@@ -41,7 +41,7 @@ public class TrainingMapper {
         Training training = new Training();
         training.setTrainingName(request.getTrainingName());
         training.setTrainingDate(request.getTrainingDate());
-        training.setTrainingDuration(request.getTrainingDuration());
+        training.setTrainingDurationMinutes(request.getTrainingDurationMinutes());
         training.setTrainee(traineeService.getByUsername(request.getTraineeUsername()));
         training.setTrainer(trainerService.getByUsername(request.getTrainerUsername()));
         training.setTrainingType(trainingTypeService.getById(request.getTrainingTypeId()));

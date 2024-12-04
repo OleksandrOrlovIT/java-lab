@@ -143,7 +143,7 @@ public class TraineeController {
     @IsSelf
     @PatchMapping("/active")
     public ResponseEntity<?> activateDeactivateTrainee(@RequestBody @Validated UsernameIsActiveUser request){
-        traineeService.activateDeactivateTrainee(request.getUsername(), request.getIsActive());
+        traineeService.activateDeactivateTrainee(request.getUsername(), request.isActive());
 
         return ResponseEntity.ok().build();
     }

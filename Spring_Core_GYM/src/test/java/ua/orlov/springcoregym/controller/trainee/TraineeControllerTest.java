@@ -119,7 +119,7 @@ class TraineeControllerTest {
         request.setLastName("lastname");
         request.setAddress("address");
         request.setDateOfBirth(LocalDate.of(2020, 10, 10));
-        request.setIsActive(true);
+        request.setActive(true);
 
         when(traineeMapper.updateTraineeRequestToTrainee(any())).thenReturn(new Trainee());
         when(traineeService.update(any())).thenReturn(new Trainee());
@@ -174,7 +174,7 @@ class TraineeControllerTest {
     void activateDeactivateTraineeByUsernameThenSuccess() throws Exception {
         UsernameIsActiveUser request = new UsernameIsActiveUser();
         request.setUsername("username");
-        request.setIsActive(true);
+        request.setActive(true);
 
         mockMvc.perform(patch("/api/v1/trainee/active")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -27,9 +27,9 @@ public class CreateTrainingRequest {
     @NotNull(message = "trainingDate is required.")
     private LocalDate trainingDate;
 
-    @NotNull(message = "trainingDuration is required.")
-    private Long trainingDuration;
+    @NotNull(message = "trainingDurationMinutes is required.")
+    private Integer trainingDurationMinutes;
 
-    @NotNull(message = "trainingDuration is required.")
+    @NotNull(message = "trainingTypeId is required.")
     private Long trainingTypeId;
 }

@@ -52,4 +52,18 @@ server:
     trust-store: classpath:myCertificate.jks
     trust-store-type: PKCS12
     trust-store-password: rootroot
-  port: 8443
+  port: 0
+
+thread-pool:
+  size: 10
+  max-pool-size: 20
+  queue-capacity: 50
+
+
+rabbitmq:
+  host: rabbitmq
+  port: 5672
+  username: user
+  password: user
+  trainer-workload-queue-name: trainerWorkloadQueue
+  retry-time-ms: 5000

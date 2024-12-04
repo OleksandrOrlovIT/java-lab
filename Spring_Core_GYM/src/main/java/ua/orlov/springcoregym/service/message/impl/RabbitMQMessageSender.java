@@ -1,4 +1,4 @@
-package ua.orlov.springcoregym.service.messages.impl;
+package ua.orlov.springcoregym.service.message.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ua.orlov.springcoregym.dto.trainer.TrainerWorkload;
-import ua.orlov.springcoregym.service.messages.MessageSender;
+import ua.orlov.springcoregym.service.message.MessageSender;
 
 import java.util.HashMap;
 import java.util.Map;

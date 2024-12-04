@@ -107,7 +107,7 @@ class TraineeTrainerMapperTest {
         assertNotNull(trainerFullResponse);
         assertEquals(trainer.getFirstName(), trainerFullResponse.getFirstName());
         assertEquals(trainer.getLastName(), trainerFullResponse.getLastName());
-        assertEquals(trainer.isActive(), trainerFullResponse.getIsActive());
+        assertEquals(trainer.isActive(), trainerFullResponse.isActive());
         assertEquals(trainer.getTrainees().size(), trainerFullResponse.getTrainees().size());
         assertNotNull(trainerFullResponse.getSpecialization());
 
@@ -135,7 +135,7 @@ class TraineeTrainerMapperTest {
         assertEquals(trainer.getUsername(), trainerFullResponse.getUsername());
         assertEquals(trainer.getFirstName(), trainerFullResponse.getFirstName());
         assertEquals(trainer.getLastName(), trainerFullResponse.getLastName());
-        assertEquals(trainer.isActive(), trainerFullResponse.getIsActive());
+        assertEquals(trainer.isActive(), trainerFullResponse.isActive());
         assertEquals(trainer.getTrainees().size(), trainerFullResponse.getTrainees().size());
         assertNotNull(trainerFullResponse.getSpecialization());
 

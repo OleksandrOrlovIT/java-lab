@@ -1,10 +1,8 @@
-package ua.orlov.springcoregym.exception;
+package ua.orlov.gymtrainerworkload.controller.advice;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +14,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
 public class GlobalExceptionHandlerTest {
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(new TestController())
                 .setControllerAdvice(new GlobalExceptionHandler())
@@ -49,17 +45,6 @@ public class GlobalExceptionHandlerTest {
 
         String content = result.getResponse().getContentAsString();
         assertEquals("{\"message\":\"No such element\",\"status\":\"NOT_FOUND\"}", content);
-    }
-
-    @Test
-    void handleAccessDeniedExceptionTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/access-denied")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Access denied Exception\",\"status\":\"FORBIDDEN\"}", content);
     }
 
     @Test
@@ -81,7 +66,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Illegal argument Exception\",\"status\":\"BAD_REQUEST\"}", content);
+        assertEquals("{\"message\":\"An unexpected illegal argument was provided\",\"status\":\"BAD_REQUEST\"}", content);
     }
 
     @Test
@@ -92,7 +77,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Runtime Exception\",\"status\":\"INTERNAL_SERVER_ERROR\"}", content);
+        assertEquals("{\"message\":\"An unexpected runtime error occurred.\",\"status\":\"INTERNAL_ERROR\"}", content);
     }
 
     @Test
@@ -103,7 +88,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Exception\",\"status\":\"INTERNAL_SERVER_ERROR\"}", content);
+        assertEquals("{\"message\":\"An unexpected error occurred.\",\"status\":\"GENERAL_ERROR\"}", content);
     }
 
     @Test
@@ -114,18 +99,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Failed to convert value of type 'null' to required type 'java.lang.Integer'; Type mismatch\",\"status\":\"BAD_REQUEST\"}", content);
-    }
-
-    @Test
-    void handleNoResourceFoundException() throws Exception {
-        MvcResult result = mockMvc.perform(get("/no-resource-found")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"No static resource /path.\",\"status\":\"NOT_FOUND\"}", content);
+        assertEquals("{\"message\":\"Method parameter 'id': Failed to convert value of type 'null' to required type 'java.lang.Integer'; Type mismatch\",\"status\":\"BAD_REQUEST\"}", content);
     }
 
     @Test
@@ -145,26 +119,27 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void handleAuthenticationExceptionTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/authentication-exception")
-                        .header("Authorization", "Bearer expired-token")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
+    void handleHttpMessageNotReadableException() throws Exception {
+        String invalidJson = "asdaksjdjashfivoqnva";
+
+        MvcResult result = mockMvc.perform(post("/http-message-not-readable")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Authentication failed, invalid credentials\",\"status\":\"UNAUTHORIZED\"}", content);
+        assertEquals("{\"message\":\"JSON parse error: Unrecognized token 'asdaksjdjashfivoqnva': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')\",\"status\":\"BAD_REQUEST\"}", content);
     }
 
     @Test
-    void handleTooManyAttemptsExceptionTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/too-many-attempts")
-                        .header("Authorization", "Bearer retry-later-token")
+    void handleBusinessLogicException() throws Exception {
+        MvcResult result = mockMvc.perform(get("/business-logic-exception")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isTooManyRequests())
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Too many attempts, please try again later.\",\"status\":\"TOO_MANY_REQUESTS\"}", content);
+        assertEquals("{\"message\":\"Business Logic\",\"status\":\"LOGIC_ERROR\"}", content);
     }
 }

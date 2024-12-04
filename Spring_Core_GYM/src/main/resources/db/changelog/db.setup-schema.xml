@@ -122,7 +122,7 @@
             <column name="training_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="training_duration" type="BIGINT">
+            <column name="training_duration_minutes" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
             <column name="training_name" type="VARCHAR(255)">

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -135,7 +134,7 @@ class TrainingControllerTest {
         request.setTrainingTypeId(1L);
         request.setTrainerUsername("TrainerUsername");
         request.setTraineeUsername("TraineeUsername");
-        request.setTrainingDuration(50L);
+        request.setTrainingDurationMinutes(50);
 
         when(trainingMapper.createTrainingRequestToTraining(any())).thenReturn(new Training());
         when(trainingService.create(any())).thenReturn(new Training());

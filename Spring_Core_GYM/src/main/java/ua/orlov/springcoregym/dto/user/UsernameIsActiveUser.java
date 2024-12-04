@@ -17,5 +17,5 @@ public class UsernameIsActiveUser {
     private String username;
 
     @NotNull(message = "isActive is required.")
-    private Boolean isActive;
+    private boolean isActive;
 }

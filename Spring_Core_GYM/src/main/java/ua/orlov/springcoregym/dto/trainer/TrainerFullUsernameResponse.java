@@ -23,7 +23,7 @@ public class TrainerFullUsernameResponse {
 
     private TrainingTypeResponse specialization;
 
-    private Boolean isActive;
+    private boolean isActive;
 
     private List<TraineeNamesResponse> trainees;
 }

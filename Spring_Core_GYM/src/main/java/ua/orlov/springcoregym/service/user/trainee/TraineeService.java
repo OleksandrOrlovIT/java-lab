@@ -17,7 +17,7 @@ public interface TraineeService {
      *
      * @param trainee the trainee entity to create
      * @return the created {@link Trainee} entity
-     * @throws java.lang.NullPointerException if the trainee or required fields are null
+     * @throws NullPointerException if the trainee or required fields are null
      */
     Trainee create(Trainee trainee);
 
@@ -42,7 +42,7 @@ public interface TraineeService {
      *
      * @param trainee the trainee entity to update
      * @return the updated {@link Trainee} entity
-     * @throws java.lang.IllegalArgumentException if the isActive field is changed during update
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the isActive field is changed during update
      */
     Trainee update(Trainee trainee);
 
@@ -59,7 +59,7 @@ public interface TraineeService {
      * @param username the trainee's username
      * @param password the trainee's password
      * @return true if the password matches, false otherwise
-     * @throws java.lang.IllegalArgumentException if no trainee is found with the provided username
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if no trainee is found with the provided username
      */
     boolean isUserNameMatchPassword(String username, String password);
 
@@ -69,7 +69,7 @@ public interface TraineeService {
      * @param trainee the trainee entity
      * @param newPassword the new password to set
      * @return the updated {@link Trainee} entity with the new password
-     * @throws java.lang.IllegalArgumentException if the current password is incorrect
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the current password is incorrect
      */
     Trainee changePassword(Trainee trainee, String newPassword);
 
@@ -78,7 +78,7 @@ public interface TraineeService {
      *
      * @param traineeId the ID of the trainee to activate
      * @return the activated {@link Trainee} entity
-     * @throws java.lang.IllegalArgumentException if the trainee is already active
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the trainee is already active
      */
     Trainee activateTrainee(Long traineeId);
 
@@ -87,7 +87,7 @@ public interface TraineeService {
      *
      * @param traineeId the ID of the trainee to deactivate
      * @return the deactivated {@link Trainee} entity
-     * @throws java.lang.IllegalArgumentException if the trainee is already deactivated
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the trainee is already deactivated
      */
     Trainee deactivateTrainee(Long traineeId);
 
@@ -105,7 +105,7 @@ public interface TraineeService {
      * @param userName the trainee's username
      * @param password the trainee's password
      * @return the authenticated {@link Trainee} entity
-     * @throws java.lang.IllegalArgumentException if the username or password is incorrect
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the username or password is incorrect
      */
     Trainee authenticateTrainee(String userName, String password);
 
@@ -114,7 +114,7 @@ public interface TraineeService {
      *
      * @param traineeUsername the username of the trainee
      * @return the found {@link Trainee} entity
-     * @throws java.lang.IllegalArgumentException if no trainee is found with the provided username
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if no trainee is found with the provided username
      */
     Trainee getByUsername(String traineeUsername);
 

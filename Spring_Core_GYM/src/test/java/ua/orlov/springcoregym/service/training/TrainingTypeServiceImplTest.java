@@ -27,7 +27,7 @@ class TrainingTypeServiceImplTest {
 
     @Test
     void getByIdGivenNullIdThenException() {
-        var e = assertThrows(NullPointerException.class, () -> trainingTypeService.getById(null));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainingTypeService.getById(null));
 
         assertEquals("TrainingType id must not be null", e.getMessage());
     }
@@ -57,7 +57,7 @@ class TrainingTypeServiceImplTest {
 
         when(trainingTypeDao.getById(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(NoSuchElementException.class, () -> trainingTypeService.getById(id));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainingTypeService.getById(id));
 
         assertEquals("TrainingType not found with id = " + id, e.getMessage());
     }

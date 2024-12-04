@@ -26,7 +26,6 @@ import java.util.Optional;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@DirtiesContext
 @Transactional
 @Sql(scripts = "/sql/trainee/populate_trainee.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(scripts = "/sql/prune_tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)

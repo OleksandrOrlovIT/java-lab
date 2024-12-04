@@ -2,14 +2,12 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres-db
-    environment:
-      POSTGRES_DB: GymDB
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: master
+    env_file:
+      - .env
     ports:
       - "5432:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d GymDB" ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -36,11 +34,13 @@ services:
   spring-boot-gym:
     image: spring-gym
     container_name: spring-boot-gym
+    env_file:
+      - .env
     environment:
-    - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=rootroot -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=rootroot"
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/GymDB
-    - SPRING_DATASOURCE_USERNAME=postgres
-    - SPRING_DATASOURCE_PASSWORD=master
+    - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=${KEY_STORE_PASSWORD} -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=${TRUST_STORE_PASSWORD}"
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/${POSTGRES_DB}
+    - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+    - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
     - SPRING_PROFILES_ACTIVE=prod
     ports:
       - "8443:8443"
@@ -65,8 +65,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     networks:
       gym-network:
         ipv4_address: 172.18.0.10

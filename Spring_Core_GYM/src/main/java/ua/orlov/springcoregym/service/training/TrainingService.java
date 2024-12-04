@@ -16,7 +16,7 @@ public interface TrainingService {
      *
      * @param training the training entity to create
      * @return the created {@link Training} entity
-     * @throws java.lang.NullPointerException if the training or any of its required fields are null
+     * @throws NullPointerException if the training or any of its required fields are null
      */
     Training create(Training training);
 

@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.orlov.springcoregym.exception.BusinessLogicException;
 import ua.orlov.springcoregym.model.user.User;
 import ua.orlov.springcoregym.service.token.InvalidTokenService;
 
@@ -187,7 +188,7 @@ class JwtServiceImplTest {
             }
         };
 
-        assertThrows(IllegalArgumentException.class, () -> jwtServiceImpl.generateToken(user));
+        assertThrows(BusinessLogicException.class, () -> jwtServiceImpl.generateToken(user));
     }
 
     @Test

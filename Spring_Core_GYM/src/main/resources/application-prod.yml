@@ -33,7 +33,7 @@ management:
 
 token:
   signing:
-    key: 63B74F4E1D5F0B2C4A3F2E685F7A1C534D7E357E1D7F5C3B495C734B64327844
+    key: ${TOKEN_SIGNING_KEY}
 
 max:
   login:
@@ -52,10 +52,10 @@ server:
     enabled: true
     key-store: classpath:myCertificate.jks
     key-store-type: PKCS12
-    key-store-password: rootroot
+    key-store-password: ${KEY_STORE_PASSWORD}
     trust-store: classpath:myCertificate.jks
     trust-store-type: PKCS12
-    trust-store-password: rootroot
+    trust-store-password: ${TRUST_STORE_PASSWORD}
   port: 8443
 
 logging:
@@ -64,10 +64,15 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%X{X-Transaction-Id}] [%thread] %-5level %logger{36} - %msg%n"
 
-RABBITMQ:
-  HOST: rabbitmq
-  PORT: 5672
-  USERNAME: guest
-  PASSWORD: guest
-  TRAINER-WORKLOAD-QUEUE-NAME: trainerWorkloadQueue
-  RETRY-TIME-MS: 5000
+rabbitmq:
+  host: rabbitmq
+  port: 5672
+  username: ${RABBITMQ_USER}
+  password: ${RABBITMQ_PASSWORD}
+  trainer-workload-queue-name: trainerWorkloadQueue
+  retry-time-ms: 5000
+
+thread-pool:
+  size: 10
+  max-pool-size: 20
+  queue-capacity: 50

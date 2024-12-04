@@ -12,6 +12,7 @@ import ua.orlov.springcoregym.dao.impl.user.UserDao;
 import ua.orlov.springcoregym.dao.impl.user.trainee.TraineeDao;
 import ua.orlov.springcoregym.dao.impl.user.trainer.TrainerDao;
 import ua.orlov.springcoregym.dto.trainee.TraineeTrainingDTO;
+import ua.orlov.springcoregym.exception.BusinessLogicException;
 import ua.orlov.springcoregym.model.training.Training;
 import ua.orlov.springcoregym.model.user.Trainee;
 import ua.orlov.springcoregym.model.user.Trainer;
@@ -62,21 +63,21 @@ class TraineeServiceImplTest {
 
     @Test
     void updateGivenNullThenException() {
-        var e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.update(null));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.update(null));
         assertEquals("Trainee can't be null", e.getMessage());
     }
 
     @Test
     void updateGivenFirstNameNullThenException() {
         Trainee trainee = new Trainee();
-        var e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.update(trainee));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.update(trainee));
         assertEquals("Trainee's firstName can't be null", e.getMessage());
     }
 
     @Test
     void updateGivenLastNameNullThenException() {
         Trainee trainee = Trainee.builder().firstName(FIRST_NAME).build();
-        var e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.update(trainee));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.update(trainee));
         assertEquals("Trainee's lastName can't be null", e.getMessage());
     }
 
@@ -86,7 +87,7 @@ class TraineeServiceImplTest {
 
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(NoSuchElementException.class, () -> traineeServiceImpl.update(trainee));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> traineeServiceImpl.update(trainee));
         assertEquals("Trainee not found " + trainee.getUsername(), e.getMessage());
         verify(traineeDAO, times(1)).getByUsername(any());
     }
@@ -192,21 +193,21 @@ class TraineeServiceImplTest {
 
     @Test
     void createGivenNullThenException() {
-        var e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.create(null));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.create(null));
         assertEquals("Trainee can't be null", e.getMessage());
     }
 
     @Test
     void createGivenFirstNameNullThenException() {
         Trainee trainee = new Trainee();
-        var e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.create(trainee));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.create(trainee));
         assertEquals("Trainee's firstName can't be null", e.getMessage());
     }
 
     @Test
     void createGivenLastNameNullThenException() {
         Trainee trainee = Trainee.builder().firstName(FIRST_NAME).build();
-        var e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.create(trainee));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> traineeServiceImpl.create(trainee));
         assertEquals("Trainee's lastName can't be null", e.getMessage());
     }
 
@@ -277,7 +278,7 @@ class TraineeServiceImplTest {
 
     @Test
     void selectGivenNullThenException() {
-        var e = assertThrows(NoSuchElementException.class, () -> traineeServiceImpl.select(null));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> traineeServiceImpl.select(null));
         assertEquals("Trainee not found with id = " + null, e.getMessage());
     }
 
@@ -302,7 +303,7 @@ class TraineeServiceImplTest {
 
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.of(trainee));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.update(trainee2));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.update(trainee2));
         assertEquals("IsActive field can't be changed in update", e.getMessage());
 
         verify(traineeDAO, times(1)).getByUsername(any());
@@ -312,7 +313,7 @@ class TraineeServiceImplTest {
     void isUserNameMatchPasswordGivenNotFoundThenException() {
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.isUserNameMatchPassword("", ""));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.isUserNameMatchPassword("", ""));
 
         assertEquals("Trainee not found ", e.getMessage());
         verify(traineeDAO, times(1)).getByUsername(any());
@@ -350,7 +351,7 @@ class TraineeServiceImplTest {
 
         when(traineeDAO.getById(any())).thenReturn(Optional.of(trainee));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.changePassword(traineeWithWrongPassword, "newPass"));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.changePassword(traineeWithWrongPassword, "newPass"));
 
         assertEquals("Wrong password for trainee " + traineeWithWrongPassword.getUsername(), e.getMessage());
         verify(traineeDAO, times(1)).getById(any());
@@ -395,7 +396,7 @@ class TraineeServiceImplTest {
 
         when(traineeDAO.getById(any())).thenReturn(Optional.of(trainee));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.activateTrainee(trainee.getId()));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.activateTrainee(trainee.getId()));
 
         assertEquals("Trainee is already active " + trainee, e.getMessage());
         verify(traineeDAO, times(1)).getById(any());
@@ -421,7 +422,7 @@ class TraineeServiceImplTest {
 
         when(traineeDAO.getById(any())).thenReturn(Optional.of(trainee));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.deactivateTrainee(trainee.getId()));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.deactivateTrainee(trainee.getId()));
 
         assertEquals("Trainee is already deactivated " + trainee, e.getMessage());
         verify(traineeDAO, times(1)).getById(any());
@@ -471,7 +472,7 @@ class TraineeServiceImplTest {
     void authenticateTraineeGivenNotFoundThenException() {
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.authenticateTrainee(USERNAME, ""));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.authenticateTrainee(USERNAME, ""));
 
         assertEquals("Trainee not found " + USERNAME, e.getMessage());
         verify(traineeDAO, times(1)).getByUsername(any());
@@ -481,7 +482,7 @@ class TraineeServiceImplTest {
     void authenticateTraineeGivenWrongPasswordThenException() {
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.ofNullable(Trainee.builder().password("pass").build()));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> traineeServiceImpl.authenticateTrainee(USERNAME, PASSWORD));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> traineeServiceImpl.authenticateTrainee(USERNAME, PASSWORD));
 
         assertEquals("Wrong password for trainee " + USERNAME, e.getMessage());
         verify(traineeDAO, times(1)).getByUsername(any());
@@ -501,7 +502,7 @@ class TraineeServiceImplTest {
     void getByUsernameGivenNotFoundThenException() {
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(NoSuchElementException.class, () -> traineeServiceImpl.getByUsername(USERNAME));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> traineeServiceImpl.getByUsername(USERNAME));
 
         assertEquals("Trainee not found " + USERNAME, e.getMessage());
         verify(traineeDAO, times(1)).getByUsername(any());
@@ -524,7 +525,7 @@ class TraineeServiceImplTest {
         when(traineeDAO.getById(any())).thenReturn(Optional.of(trainee));
         when(trainerDAO.getByIds(any())).thenReturn(List.of());
 
-        var e = assertThrows(EntityNotFoundException.class, () -> traineeServiceImpl.updateTraineeTrainers(ID, List.of()));
+        EntityNotFoundException e = assertThrows(EntityNotFoundException.class, () -> traineeServiceImpl.updateTraineeTrainers(ID, List.of()));
 
         assertEquals("No trainers found with the provided IDs", e.getMessage());
         verify(traineeDAO, times(1)).getById(any());
@@ -553,7 +554,7 @@ class TraineeServiceImplTest {
         when(traineeDAO.getByUsername(any())).thenReturn(Optional.of(new Trainee()));
         when(trainerDAO.getByUsernames(any())).thenReturn(new ArrayList<>());
 
-        var e = assertThrows(EntityNotFoundException.class,
+        EntityNotFoundException e = assertThrows(EntityNotFoundException.class,
                 () -> traineeServiceImpl.updateTraineeTrainers(USERNAME, new ArrayList<>()));
 
         assertEquals("No trainers found with the provided userNames", e.getMessage());

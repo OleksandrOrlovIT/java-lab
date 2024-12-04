@@ -1,12 +1,16 @@
-package ua.orlov.springcoregym.exception;
+package ua.orlov.gymtrainerworkload.controller.advice;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 
 import java.util.NoSuchElementException;
 
@@ -16,11 +20,6 @@ public class TestController {
     @GetMapping("/no-such-element")
     public void noSuchElement() {
         throw new NoSuchElementException("No such element");
-    }
-
-    @GetMapping("/access-denied")
-    public void accessDenied() throws AccessDeniedException {
-        throw new AccessDeniedException("Access denied Exception");
     }
 
     @GetMapping("/entity-not-found")
@@ -54,14 +53,14 @@ public class TestController {
         throw new NoResourceFoundException(HttpMethod.GET, "/path");
     }
 
-    @GetMapping("/too-many-attempts")
-    public void tooManyAttempts() {
-        throw new TooManyAttemptsException("Too many attempts, please try again later.");
+    @PostMapping("/http-message-not-readable")
+    public void messageNotReadable(@RequestBody @Validated TrainerWorkload trainerWorkload) {
+
     }
 
-    @GetMapping("/authentication-exception")
-    public void authenticationException() {
-        throw new org.springframework.security.core
-                .AuthenticationException("Authentication failed, invalid credentials") {};
+    @GetMapping("/business-logic-exception")
+    public void businessLogicException() {
+        throw new BusinessLogicException("Business Logic");
     }
+
 }

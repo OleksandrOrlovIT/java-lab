@@ -54,7 +54,7 @@ public class TraineeTrainerMapper {
         response.setFirstName(trainer.getFirstName());
         response.setLastName(trainer.getLastName());
         response.setSpecialization(trainingTypeMapper.trainingTypeToTrainingTypeResponse(trainer.getSpecialization()));
-        response.setIsActive(trainer.isActive());
+        response.setActive(trainer.isActive());
         response.setTrainees(traineeMapper.traineeListToTraineeNamesResponseList(trainer.getTrainees()));
         return response;
     }
@@ -65,7 +65,7 @@ public class TraineeTrainerMapper {
         response.setFirstName(trainer.getFirstName());
         response.setLastName(trainer.getLastName());
         response.setSpecialization(trainingTypeMapper.trainingTypeToTrainingTypeResponse(trainer.getSpecialization()));
-        response.setIsActive(trainer.isActive());
+        response.setActive(trainer.isActive());
         response.setTrainees(traineeMapper.traineeListToTraineeNamesResponseList(trainer.getTrainees()));
         return response;
     }

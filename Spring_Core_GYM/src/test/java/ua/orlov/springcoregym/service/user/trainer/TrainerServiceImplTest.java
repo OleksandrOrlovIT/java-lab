@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.orlov.springcoregym.dao.impl.user.UserDao;
 import ua.orlov.springcoregym.dao.impl.user.trainee.TraineeDao;
 import ua.orlov.springcoregym.dao.impl.user.trainer.TrainerDao;
+import ua.orlov.springcoregym.exception.BusinessLogicException;
 import ua.orlov.springcoregym.model.training.Training;
 import ua.orlov.springcoregym.model.user.Trainee;
 import ua.orlov.springcoregym.model.user.Trainer;
@@ -54,21 +55,21 @@ class TrainerServiceImplTest {
 
     @Test
     void updateGivenNullThenException() {
-        var e = assertThrows(NullPointerException.class, () -> trainerService.update(null));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerService.update(null));
         assertEquals("Trainer can't be null", e.getMessage());
     }
 
     @Test
     void updateGivenFirstNameNullThenException() {
         Trainer trainer = new Trainer();
-        var e = assertThrows(NullPointerException.class, () -> trainerService.update(trainer));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerService.update(trainer));
         assertEquals("Trainer's firstName can't be null", e.getMessage());
     }
 
     @Test
     void updateGivenLastNameNullThenException() {
         Trainer trainer = Trainer.builder().username(USERNAME).firstName(FIRST_NAME).build();
-        var e = assertThrows(NullPointerException.class, () -> trainerService.update(trainer));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerService.update(trainer));
         assertEquals("Trainer's lastName can't be null", e.getMessage());
     }
 
@@ -78,7 +79,7 @@ class TrainerServiceImplTest {
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(NoSuchElementException.class, () -> trainerService.update(trainer));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerService.update(trainer));
         assertEquals("Trainer not found " + trainer.getUsername(), e.getMessage());
         verify(trainerDao, times(1)).getByUsername(any());
     }
@@ -180,21 +181,21 @@ class TrainerServiceImplTest {
 
     @Test
     void createGivenNullThenException() {
-        var e = assertThrows(NullPointerException.class, () -> trainerService.create(null));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerService.create(null));
         assertEquals("Trainer can't be null", e.getMessage());
     }
 
     @Test
     void createGivenFirstNameNullThenException() {
         Trainer trainer = new Trainer();
-        var e = assertThrows(NullPointerException.class, () -> trainerService.create(trainer));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerService.create(trainer));
         assertEquals("Trainer's firstName can't be null", e.getMessage());
     }
 
     @Test
     void createGivenLastNameNullThenException() {
         Trainer trainer = Trainer.builder().firstName(FIRST_NAME).build();
-        var e = assertThrows(NullPointerException.class, () -> trainerService.create(trainer));
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerService.create(trainer));
         assertEquals("Trainer's lastName can't be null", e.getMessage());
     }
 
@@ -267,7 +268,7 @@ class TrainerServiceImplTest {
 
     @Test
     void selectGivenNullThenException() {
-        var e = assertThrows(NoSuchElementException.class, () -> trainerService.select(null));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerService.select(null));
         assertEquals("Trainer not found with id = " + null, e.getMessage());
     }
 
@@ -292,7 +293,7 @@ class TrainerServiceImplTest {
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.update(trainer2));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.update(trainer2));
         assertEquals("IsActive field can't be changed in update", e.getMessage());
 
         verify(trainerDao, times(1)).getByUsername(any());
@@ -302,7 +303,7 @@ class TrainerServiceImplTest {
     void isUserNameMatchPasswordGivenNotFoundThenException() {
         when(trainerDao.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.isUserNameMatchPassword("", ""));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.isUserNameMatchPassword("", ""));
 
         assertEquals("Trainer not found ", e.getMessage());
         verify(trainerDao, times(1)).getByUsername(any());
@@ -340,7 +341,7 @@ class TrainerServiceImplTest {
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.changePassword(trainerWithWrongPassword, "newPass"));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.changePassword(trainerWithWrongPassword, "newPass"));
 
         assertEquals("Wrong password for trainer " + trainerWithWrongPassword.getUsername(), e.getMessage());
         verify(trainerDao, times(1)).getById(any());
@@ -372,7 +373,7 @@ class TrainerServiceImplTest {
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.activateTrainer(trainer.getId()));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.activateTrainer(trainer.getId()));
 
         assertEquals("Trainer is already active " + trainer, e.getMessage());
         verify(trainerDao, times(1)).getById(any());
@@ -398,7 +399,7 @@ class TrainerServiceImplTest {
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.deactivateTrainer(trainer.getId()));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.deactivateTrainer(trainer.getId()));
 
         assertEquals("Trainer is already deactivated " + trainer, e.getMessage());
         verify(trainerDao, times(1)).getById(any());
@@ -435,7 +436,7 @@ class TrainerServiceImplTest {
         when(traineeDao.getByUsername(any())).thenReturn(Optional.empty());
 
         Pageable pageable = new Pageable(0, 2);
-        var e = assertThrows(IllegalArgumentException.class,
+        BusinessLogicException e = assertThrows(BusinessLogicException.class,
                 () -> trainerService.getTrainersWithoutPassedTrainee(FIRST_NAME, pageable));
 
         assertEquals("Trainee not found " + FIRST_NAME, e.getMessage());
@@ -470,7 +471,7 @@ class TrainerServiceImplTest {
     void authenticateTrainerGivenNotFoundThenException() {
         when(trainerDao.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.authenticateTrainer(USERNAME, ""));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.authenticateTrainer(USERNAME, ""));
 
         assertEquals("Trainer not found " + USERNAME, e.getMessage());
         verify(trainerDao, times(1)).getByUsername(any());
@@ -480,7 +481,7 @@ class TrainerServiceImplTest {
     void authenticateTrainerGivenWrongPasswordThenException() {
         when(trainerDao.getByUsername(any())).thenReturn(Optional.ofNullable(Trainer.builder().password("pass").build()));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerService.authenticateTrainer(USERNAME, PASSWORD));
+        BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.authenticateTrainer(USERNAME, PASSWORD));
 
         assertEquals("Wrong password for trainer " + USERNAME, e.getMessage());
         verify(trainerDao, times(1)).getByUsername(any());
@@ -500,7 +501,7 @@ class TrainerServiceImplTest {
     void getByUsernameGivenNotFoundThenException() {
         when(trainerDao.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(NoSuchElementException.class, () -> trainerService.getByUsername(USERNAME));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerService.getByUsername(USERNAME));
 
         assertEquals("Trainer not found " + USERNAME, e.getMessage());
         verify(trainerDao, times(1)).getByUsername(any());

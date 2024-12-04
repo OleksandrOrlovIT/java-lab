@@ -1,4 +1,4 @@
-package ua.orlov.springcoregym.service.messages;
+package ua.orlov.springcoregym.service.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ua.orlov.springcoregym.dto.trainer.TrainerWorkload;

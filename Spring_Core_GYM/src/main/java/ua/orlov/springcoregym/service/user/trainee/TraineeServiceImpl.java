@@ -10,6 +10,7 @@ import ua.orlov.springcoregym.dao.impl.user.UserDao;
 import ua.orlov.springcoregym.dao.impl.user.trainee.TraineeDao;
 import ua.orlov.springcoregym.dao.impl.user.trainer.TrainerDao;
 import ua.orlov.springcoregym.dto.trainee.TraineeTrainingDTO;
+import ua.orlov.springcoregym.exception.BusinessLogicException;
 import ua.orlov.springcoregym.model.training.Training;
 import ua.orlov.springcoregym.model.user.Trainee;
 import ua.orlov.springcoregym.model.user.Trainer;
@@ -47,7 +48,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setPassword(foundTrainee.getPassword());
 
         if (foundTrainee.isActive() != trainee.isActive()) {
-            throw new IllegalArgumentException("IsActive field can't be changed in update");
+            throw new BusinessLogicException("IsActive field can't be changed in update");
         }
 
         trainee.setTrainings(foundTrainee.getTrainings());
@@ -76,24 +77,7 @@ public class TraineeServiceImpl implements TraineeService {
 
         Trainee createdTrainee = traineeDAO.create(trainee);
 
-        Trainee returnedTrainee = cloneTrainee(createdTrainee);
-        returnedTrainee.setPassword(oldPassword);
-
-        return returnedTrainee;
-    }
-
-    private Trainee cloneTrainee(Trainee trainee) {
-        Trainee clonedTrainee = new Trainee();
-        clonedTrainee.setId(trainee.getId());
-        clonedTrainee.setUsername(trainee.getUsername());
-        clonedTrainee.setPassword(trainee.getPassword());
-        clonedTrainee.setFirstName(trainee.getFirstName());
-        clonedTrainee.setLastName(trainee.getLastName());
-        clonedTrainee.setAddress(trainee.getAddress());
-        clonedTrainee.setDateOfBirth(trainee.getDateOfBirth());
-        clonedTrainee.setTrainings(trainee.getTrainings());
-        clonedTrainee.setTrainers(trainee.getTrainers());
-        return clonedTrainee;
+        return createdTrainee.toBuilder().password(oldPassword).build();
     }
 
     @Override
@@ -129,7 +113,7 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public boolean isUserNameMatchPassword(String username, String password) {
         Trainee foundTrainee = traineeDAO.getByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Trainee not found " + username));
+                .orElseThrow(() -> new BusinessLogicException("Trainee not found " + username));
 
         return password != null && password.equals(foundTrainee.getPassword());
     }
@@ -140,7 +124,7 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee foundTrainee = select(trainee.getId());
 
         if (!foundTrainee.getPassword().equals(trainee.getPassword())) {
-            throw new IllegalArgumentException("Wrong password for trainee " + trainee.getUsername());
+            throw new BusinessLogicException("Wrong password for trainee " + trainee.getUsername());
         }
 
         foundTrainee.setPassword(newPassword);
@@ -154,7 +138,7 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee foundTrainee = select(traineeId);
 
         if (foundTrainee.isActive()) {
-            throw new IllegalArgumentException("Trainee is already active " + foundTrainee);
+            throw new BusinessLogicException("Trainee is already active " + foundTrainee);
         }
 
         foundTrainee.setActive(true);
@@ -168,7 +152,7 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee foundTrainee = select(traineeId);
 
         if (!foundTrainee.isActive()) {
-            throw new IllegalArgumentException("Trainee is already deactivated " + foundTrainee);
+            throw new BusinessLogicException("Trainee is already deactivated " + foundTrainee);
         }
 
         foundTrainee.setActive(false);
@@ -189,10 +173,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public Trainee authenticateTrainee(String userName, String password) {
         Trainee foundTrainee = traineeDAO.getByUsername(userName)
-                .orElseThrow(() -> new IllegalArgumentException("Trainee not found " + userName));
+                .orElseThrow(() -> new BusinessLogicException("Trainee not found " + userName));
 
         if (!foundTrainee.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Wrong password for trainee " + userName);
+            throw new BusinessLogicException("Wrong password for trainee " + userName);
         }
 
         return foundTrainee;

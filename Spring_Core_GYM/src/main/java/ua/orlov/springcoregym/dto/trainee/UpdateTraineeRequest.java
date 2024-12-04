@@ -28,6 +28,5 @@ public class UpdateTraineeRequest {
 
     private String address;
 
-    @NotNull(message = "isActive is required.")
-    private Boolean isActive;
+    private boolean isActive;
 }

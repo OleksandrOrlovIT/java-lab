@@ -12,11 +12,8 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class LoginAttemptCacheConfig {
 
-    @Value("${logout.duration.minutes}")
-    private int lockoutDurationMinutes;
-
     @Bean
-    public LoadingCache<String, Integer> loginAttemptCache() {
+    public LoadingCache<String, Integer> loginAttemptCache(@Value("${logout.duration.minutes}") Integer lockoutDurationMinutes) {
         return CacheBuilder.newBuilder()
                 .expireAfterWrite(lockoutDurationMinutes, TimeUnit.MINUTES)
                 .maximumSize(1000)

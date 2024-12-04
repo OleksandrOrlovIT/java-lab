@@ -2,8 +2,10 @@ package ua.orlov.springcoregym.service.http;
 
 import ua.orlov.springcoregym.model.HttpRequest;
 
+import java.io.IOException;
+
 public interface CustomHttpSenderService {
 
-    String executeRequestWithEntity(HttpRequest request, String entity);
+    boolean executeRequestWithEntity(HttpRequest request, String entity);
 
 }

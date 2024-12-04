@@ -109,7 +109,7 @@ class TrainerControllerTest {
         request.setUsername("username");
         request.setFirstName("firstname");
         request.setLastName("lastname");
-        request.setIsActive(true);
+        request.setActive(true);
         request.setSpecializationId(1L);
 
         when(trainerMapper.updateTrainerRequestToTrainer(any())).thenReturn(new Trainer());
@@ -148,7 +148,7 @@ class TrainerControllerTest {
     void activateDeactivateTrainerByUsernameThenSuccess() throws Exception {
         UsernameIsActiveUser request = new UsernameIsActiveUser();
         request.setUsername("username");
-        request.setIsActive(true);
+        request.setActive(true);
 
         mockMvc.perform(patch("/api/v1/trainer/active")
                         .contentType(MediaType.APPLICATION_JSON)

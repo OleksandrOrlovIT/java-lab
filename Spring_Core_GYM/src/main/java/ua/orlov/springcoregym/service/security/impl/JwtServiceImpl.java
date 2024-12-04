@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ua.orlov.springcoregym.exception.BusinessLogicException;
 import ua.orlov.springcoregym.model.user.User;
 import ua.orlov.springcoregym.service.security.JwtService;
 import ua.orlov.springcoregym.service.token.InvalidTokenService;
@@ -47,7 +48,7 @@ public class JwtServiceImpl implements JwtService {
             claims.put("id", customUserDetails.getId());
             claims.put("userName", customUserDetails.getUsername());
         } else {
-            throw new IllegalArgumentException("UserDetails must be an instance of User to generate a token.");
+            throw new BusinessLogicException("UserDetails must be an instance of User to generate a token.");
         }
 
         return generateToken(claims, userDetails);

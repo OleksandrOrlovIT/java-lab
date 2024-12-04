@@ -138,7 +138,7 @@ class UserServiceImplTest {
         when(userDao.getByUsername(any())).thenReturn(Optional.of(new User()));
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
-        var e = assertThrows(BadCredentialsException.class,
+        BadCredentialsException e = assertThrows(BadCredentialsException.class,
                 () ->  userService.changeUserPassword("username", oldPassword, oldPassword));
 
         assertEquals("Wrong password = " + oldPassword, e.getMessage());
@@ -172,7 +172,7 @@ class UserServiceImplTest {
 
         when(userDao.getByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(EntityNotFoundException.class, () -> userService.getByUsername(username));
+        EntityNotFoundException e = assertThrows(EntityNotFoundException.class, () -> userService.getByUsername(username));
 
         assertEquals("User not found with username = " + username, e.getMessage());
     }

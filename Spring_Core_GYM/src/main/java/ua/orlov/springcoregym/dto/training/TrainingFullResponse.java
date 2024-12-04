@@ -20,7 +20,7 @@ public class TrainingFullResponse {
 
     private TrainingTypeResponse trainingType;
 
-    private Long trainingDuration;
+    private Integer trainingDurationMinutes;
 
     private String trainerName;
 }

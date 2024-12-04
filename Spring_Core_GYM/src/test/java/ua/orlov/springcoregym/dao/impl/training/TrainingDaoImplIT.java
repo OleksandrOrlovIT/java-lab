@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.orlov.springcoregym.dao.impl.user.trainee.TraineeDao;
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@DirtiesContext
 @Transactional
 @Sql(scripts = "/sql/training/populate_trainings.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(scripts = "/sql/prune_tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
@@ -70,7 +68,7 @@ class TrainingDaoImplIT {
                 .trainingName(TRAINING_NAME)
                 .trainingType(testTrainingType)
                 .trainingDate(LocalDate.MIN)
-                .trainingDuration(10L)
+                .trainingDurationMinutes(10)
                 .build();
     }
 
@@ -146,7 +144,7 @@ class TrainingDaoImplIT {
                 .trainingName(TRAINING_NAME + delim)
                 .trainingType(testTrainingTypeForUpdate)
                 .trainingDate(LocalDate.MIN.plusDays(1))
-                .trainingDuration(10L)
+                .trainingDurationMinutes(10)
                 .build();
 
         Training updated = trainingDao.update(diffTraining);
@@ -156,7 +154,7 @@ class TrainingDaoImplIT {
         assertEquals(testTrainingTypeForUpdate, updated.getTrainingType());
         assertEquals(TRAINING_NAME + delim, updated.getTrainingName());
         assertEquals(LocalDate.MIN.plusDays(1), updated.getTrainingDate());
-        assertEquals(10L, updated.getTrainingDuration());
+        assertEquals(10, updated.getTrainingDurationMinutes());
     }
 
     @Test

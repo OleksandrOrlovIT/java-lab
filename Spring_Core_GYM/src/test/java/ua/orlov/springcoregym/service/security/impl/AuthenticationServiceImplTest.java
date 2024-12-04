@@ -41,7 +41,7 @@ class AuthenticationServiceImplTest {
     void loginThenTooManyAttemptsException() {
         when(loginAttemptServiceImpl.isBlocked()).thenReturn(true);
 
-        var e = assertThrows(TooManyAttemptsException.class, () -> authenticationServiceImpl.login("", ""));
+        TooManyAttemptsException e = assertThrows(TooManyAttemptsException.class, () -> authenticationServiceImpl.login("", ""));
 
         assertEquals("Too many attempts", e.getMessage());
         verify(loginAttemptServiceImpl, times(1)).isBlocked();

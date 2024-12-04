@@ -124,7 +124,7 @@ public class TrainerController {
     @IsSelf
     @PatchMapping("/active")
     public ResponseEntity<?> activateDeactivateTrainer(@RequestBody @Validated UsernameIsActiveUser request){
-        trainerService.activateDeactivateTrainer(request.getUsername(), request.getIsActive());
+        trainerService.activateDeactivateTrainer(request.getUsername(), request.isActive());
 
         return ResponseEntity.ok().build();
     }

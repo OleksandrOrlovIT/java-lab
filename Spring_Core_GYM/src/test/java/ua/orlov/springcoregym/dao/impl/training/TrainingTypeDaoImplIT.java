@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@DirtiesContext
 @Transactional
 @Sql(scripts = "/sql/training_type/populate_training_types.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/training_type/prune_training_types.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)

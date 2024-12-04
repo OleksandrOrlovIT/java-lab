@@ -1,22 +1,22 @@
 package ua.orlov.springcoregym.configuration;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-@AllArgsConstructor
 @Configuration
 public class ThreadPoolConfig {
 
-    private final MdcTaskDecorator mdcTaskDecorator;
-
     @Bean
-    public ThreadPoolTaskExecutor taskExecutor() {
+    public ThreadPoolTaskExecutor taskExecutor(MdcTaskDecorator mdcTaskDecorator,
+                                               @Value("${thread-pool.size}") Integer threadPoolSize,
+                                               @Value("${thread-pool.max-pool-size}") Integer maxPoolSize,
+                                               @Value("${thread-pool.queue-capacity}") Integer queueCapacity) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
-        executor.setQueueCapacity(50);
+        executor.setCorePoolSize(threadPoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(queueCapacity);
         executor.setTaskDecorator(mdcTaskDecorator);
         executor.initialize();
         return executor;

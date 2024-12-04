@@ -61,7 +61,7 @@ class TraineeMapperTest {
         request.setLastName("last");
         request.setDateOfBirth(LocalDate.MAX);
         request.setAddress("address");
-        request.setIsActive(true);
+        request.setActive(true);
 
         Trainee trainee = traineeMapper.updateTraineeRequestToTrainee(request);
         assertEquals(request.getUsername(), trainee.getUsername());
@@ -69,7 +69,7 @@ class TraineeMapperTest {
         assertEquals(request.getLastName(), trainee.getLastName());
         assertEquals(request.getDateOfBirth(), trainee.getDateOfBirth());
         assertEquals(request.getAddress(), trainee.getAddress());
-        assertEquals(request.getIsActive(), trainee.isActive());
+        assertEquals(request.isActive(), trainee.isActive());
     }
 
     @Test

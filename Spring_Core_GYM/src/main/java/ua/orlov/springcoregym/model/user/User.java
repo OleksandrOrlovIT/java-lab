@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "gym_user")

@@ -30,7 +30,7 @@ class InvalidTokenServiceImplTest {
     void getByTokenThenException() {
         when(invalidTokenRepository.getByToken(TOKEN)).thenReturn(Optional.empty());
 
-        var e = assertThrows(EntityNotFoundException.class, () -> invalidTokenService.getByToken(TOKEN));
+        EntityNotFoundException e = assertThrows(EntityNotFoundException.class, () -> invalidTokenService.getByToken(TOKEN));
 
         assertEquals("Token not found = " + TOKEN, e.getMessage());
         verify(invalidTokenRepository, times(1)).getByToken(any());

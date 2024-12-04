@@ -47,7 +47,7 @@ class TrainingMapperTest {
         Training training = new Training();
         training.setTrainingName("name");
         training.setTrainingDate(LocalDate.MIN);
-        training.setTrainingDuration(50L);
+        training.setTrainingDurationMinutes(50);
         training.setTrainingType(new TrainingType());
         training.setTrainer(Trainer.builder().username("name").build());
 
@@ -58,7 +58,7 @@ class TrainingMapperTest {
         assertNotNull(response);
         assertEquals(training.getTrainingName(), response.getTrainingName());
         assertEquals(training.getTrainingDate(), response.getTrainingDate());
-        assertEquals(training.getTrainingDuration(), response.getTrainingDuration());
+        assertEquals(training.getTrainingDurationMinutes(), response.getTrainingDurationMinutes());
         assertNotNull(response.getTrainingType());
         assertEquals(training.getTrainer().getUsername(), response.getTrainerName());
 
@@ -70,14 +70,14 @@ class TrainingMapperTest {
         Training training1 = new Training();
         training1.setTrainingName("name");
         training1.setTrainingDate(LocalDate.MIN);
-        training1.setTrainingDuration(50L);
+        training1.setTrainingDurationMinutes(50);
         training1.setTrainingType(new TrainingType());
         training1.setTrainer(Trainer.builder().username("name").build());
 
         Training training2 = new Training();
         training2.setTrainingName("name");
         training2.setTrainingDate(LocalDate.MIN);
-        training2.setTrainingDuration(50L);
+        training2.setTrainingDurationMinutes(50);
         training2.setTrainingType(new TrainingType());
         training2.setTrainer(Trainer.builder().username("name").build());
 
@@ -89,13 +89,13 @@ class TrainingMapperTest {
         assertNotNull(response);
         assertEquals(training1.getTrainingName(), response.get(0).getTrainingName());
         assertEquals(training1.getTrainingDate(), response.get(0).getTrainingDate());
-        assertEquals(training1.getTrainingDuration(), response.get(0).getTrainingDuration());
+        assertEquals(training1.getTrainingDurationMinutes(), response.get(0).getTrainingDurationMinutes());
         assertNotNull(response.get(0).getTrainingType());
         assertEquals(training1.getTrainer().getUsername(), response.get(0).getTrainerName());
 
         assertEquals(training2.getTrainingName(), response.get(1).getTrainingName());
         assertEquals(training2.getTrainingDate(), response.get(1).getTrainingDate());
-        assertEquals(training2.getTrainingDuration(), response.get(1).getTrainingDuration());
+        assertEquals(training2.getTrainingDurationMinutes(), response.get(1).getTrainingDurationMinutes());
         assertNotNull(response.get(1).getTrainingType());
         assertEquals(training2.getTrainer().getUsername(), response.get(1).getTrainerName());
 
@@ -108,7 +108,7 @@ class TrainingMapperTest {
         CreateTrainingRequest request = new CreateTrainingRequest();
         request.setTrainingName("name");
         request.setTrainingDate(LocalDate.MIN);
-        request.setTrainingDuration(50L);
+        request.setTrainingDurationMinutes(50);
         request.setTraineeUsername("Trainee");
         request.setTrainerUsername("Trainer");
         request.setTrainingTypeId(1L);
@@ -124,7 +124,7 @@ class TrainingMapperTest {
         assertNotNull(training);
         assertEquals(request.getTrainingName(), training.getTrainingName());
         assertEquals(request.getTrainingDate(), training.getTrainingDate());
-        assertEquals(request.getTrainingDuration(), training.getTrainingDuration());
+        assertEquals(request.getTrainingDurationMinutes(), training.getTrainingDurationMinutes());
         assertEquals(request.getTrainerUsername(), training.getTrainer().getUsername());
         assertEquals(request.getTrainerUsername(), training.getTrainer().getUsername());
         assertEquals(request.getTrainingTypeId(), training.getTrainingType().getId());
