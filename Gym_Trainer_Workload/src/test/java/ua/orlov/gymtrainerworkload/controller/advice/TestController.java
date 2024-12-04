@@ -1,6 +1,5 @@
 package ua.orlov.gymtrainerworkload.controller.advice;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +19,6 @@ public class TestController {
     @GetMapping("/no-such-element")
     public void noSuchElement() {
         throw new NoSuchElementException("No such element");
-    }
-
-    @GetMapping("/entity-not-found")
-    public void entityNotFound() {
-        throw new EntityNotFoundException("Entity Not Found Exception");
     }
 
     @GetMapping("/illegal-argument")

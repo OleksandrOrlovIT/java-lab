@@ -48,17 +48,6 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void handleEntityNotFoundExceptionTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/entity-not-found")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Entity Not Found Exception\",\"status\":\"NOT_FOUND\"}", content);
-    }
-
-    @Test
     void handleIllegalArgumentExceptionTest() throws Exception {
         MvcResult result = mockMvc.perform(get("/illegal-argument")
                         .contentType(MediaType.APPLICATION_JSON))

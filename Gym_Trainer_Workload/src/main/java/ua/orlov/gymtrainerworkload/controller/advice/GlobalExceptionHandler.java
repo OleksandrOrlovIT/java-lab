@@ -1,6 +1,5 @@
 package ua.orlov.gymtrainerworkload.controller.advice;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,13 +36,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         logException("MethodArgumentTypeMismatchException occurred", ex);
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", ex.getMessage());
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseBody
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex) {
-        logException("EntityNotFoundException occurred", ex);
-        return buildErrorResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -3,23 +3,23 @@ package ua.orlov.gymtrainerworkload.service.user.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.mapper.TrainerMapper;
-import ua.orlov.gymtrainerworkload.model.*;
+import ua.orlov.gymtrainerworkload.model.ActionType;
+import ua.orlov.gymtrainerworkload.model.MonthSummary;
+import ua.orlov.gymtrainerworkload.model.Trainer;
+import ua.orlov.gymtrainerworkload.model.YearSummary;
 import ua.orlov.gymtrainerworkload.repository.TrainerRepository;
-import ua.orlov.gymtrainerworkload.repository.TrainingRepository;
 import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepository trainerRepository;
-    private final TrainingRepository trainingRepository;
     private final TrainerMapper trainerMapper;
 
     @Override
@@ -34,81 +34,86 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerSummary getTrainerSummary(String username) {
-        Trainer trainer = findByUsername(username);
-
-        return trainerMapper.trainerToTrainerSummary(trainer, getTrainersDurations(trainer));
-    }
-
-    private Map<Integer, Map<Month, Integer>> getTrainersDurations(Trainer trainer) {
-        List<Training> trainings = findAllTrainingsByTrainer(trainer);
-
-        Map<Integer, Map<Month, Integer>> durations = new HashMap<>();
-
-        for(Training training : trainings) {
-            int year = training.getTrainingDate().getYear();
-            Month month = Month.fromOrder(training.getTrainingDate().getMonthValue());
-
-            durations.computeIfAbsent(year, y -> new HashMap<>());
-
-            Map<Month, Integer> monthlyDurations = durations.get(year);
-
-            monthlyDurations.merge(month, training.getDurationMinutes(), Integer::sum);
-        }
-
-        return durations;
-    }
-
-    @Override
     @Transactional
     public void changeTrainerWorkload(TrainerWorkload trainerWorkload) {
-        if(trainerWorkload.getActionType() == ActionType.ADD && !trainerExistsByUsername(trainerWorkload.getTrainerUsername())){
-            Trainer trainer = trainerMapper.trainerWorkloadToTrainer(trainerWorkload);
-            createTrainer(trainer);
-        }
-
-        Trainer trainer = findByUsername(trainerWorkload.getTrainerUsername());
-
-        Training training = trainerMapper.trainerWorkloadToTraining(trainerWorkload, trainer);
-
-        if(trainerWorkload.getActionType() == ActionType.ADD){
-            createTraining(training);
+        if (trainerWorkload.getActionType().equals(ActionType.ADD)) {
+            if (!trainerExistsByUsername(trainerWorkload.getTrainerUsername())) {
+                createTrainer(trainerMapper.trainerWorkloadToTrainer(trainerWorkload));
+            } else {
+                addTrainerWorkload(trainerWorkload);
+            }
         } else {
-            deleteTraining(training);
+            deleteTrainerWorkload(trainerWorkload);
         }
     }
 
     @Override
     public boolean trainerExistsByUsername(String username) {
-        return trainerRepository.existsByUsername(username);
+        return trainerRepository.existsById(username);
     }
 
-    @Override
-    public Training createTraining(Training training) {
-        return trainingRepository.save(training);
+    private void addTrainerWorkload(TrainerWorkload trainerWorkload) {
+        Trainer trainer = findByUsername(trainerWorkload.getTrainerUsername());
+
+        int year = trainerWorkload.getTrainingDate().getYear();
+        int month = trainerWorkload.getTrainingDate().getMonthValue();
+
+        YearSummary yearSummary = trainer.getYears().stream()
+                .filter(y -> y.getYear() == year)
+                .findFirst()
+                .orElseGet(() -> {
+                    YearSummary newYear = new YearSummary(year, new ArrayList<>());
+                    trainer.getYears().add(newYear);
+                    return newYear;
+                });
+
+        MonthSummary monthSummary = yearSummary.getMonths().stream()
+                .filter(m -> m.getMonth() == month)
+                .findFirst()
+                .orElseGet(() -> {
+                    MonthSummary newMonth = new MonthSummary(month, 0);
+                    yearSummary.getMonths().add(newMonth);
+                    return newMonth;
+                });
+
+        monthSummary.setDuration(monthSummary.getDuration() + trainerWorkload.getTrainingDurationMinutes());
+
+        trainerRepository.save(trainer);
     }
 
-    @Override
-    @Transactional
-    public void deleteTraining(Training training) {
-        Training foundTraining =
-                getTrainingByCriteria(training.getTrainer(), training.getTrainingDate(), training.getDurationMinutes());
+    private void deleteTrainerWorkload(TrainerWorkload trainerWorkload) {
+        Trainer trainer = findByUsername(trainerWorkload.getTrainerUsername());
 
-        trainingRepository.delete(foundTraining);
+        int year = trainerWorkload.getTrainingDate().getYear();
+        int month = trainerWorkload.getTrainingDate().getMonthValue();
+
+        YearSummary yearSummary = trainer.getYears().stream()
+                .filter(y -> y.getYear() == year)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Year not found for the trainer for = " + year));
+
+        MonthSummary monthSummary = yearSummary.getMonths().stream()
+                .filter(m -> m.getMonth() == month)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Month not found for the trainer for = " + month));
+
+        int updatedDuration = monthSummary.getDuration() - trainerWorkload.getTrainingDurationMinutes();
+
+        if (updatedDuration < 0) {
+            throw new IllegalArgumentException("Training duration cannot be negative");
+        }
+
+        if (updatedDuration == 0) {
+            yearSummary.getMonths().remove(monthSummary);
+        } else {
+            monthSummary.setDuration(updatedDuration);
+        }
+
+        if (yearSummary.getMonths().isEmpty()) {
+            trainer.getYears().remove(yearSummary);
+        }
+
+        trainerRepository.save(trainer);
     }
 
-    @Override
-    public List<Training> findAllTrainingsByTrainer(Trainer trainer) {
-        return trainingRepository.findByTrainer(trainer);
-    }
-
-    private Training getTrainingByCriteria(Trainer trainer, LocalDate trainingDate, Integer trainingDuration) {
-        Objects.requireNonNull(trainer, "Trainer must not be null");
-
-        return trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(trainer, trainingDate, trainingDuration)
-                .orElseThrow(() -> new NoSuchElementException(
-                        String.format("No training found for trainer '%s' on %s with duration %d",
-                                trainer.getUsername(), trainingDate, trainingDuration)
-                ));
-    }
 }

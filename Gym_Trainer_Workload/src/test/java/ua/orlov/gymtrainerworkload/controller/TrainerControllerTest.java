@@ -12,9 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.model.ActionType;
+import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
 import java.time.LocalDate;
@@ -71,12 +71,12 @@ class TrainerControllerTest {
 
     @Test
     void getSummaryMonth() throws Exception {
-        when(trainerService.getTrainerSummary(any())).thenReturn(new TrainerSummary());
+        when(trainerService.findByUsername(any())).thenReturn(new Trainer());
 
         mockMvc.perform(get("/api/v1/trainer/summary/month?username=user"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(trainerService, times(1)).getTrainerSummary(any());
+        verify(trainerService, times(1)).findByUsername(any());
     }
 }
