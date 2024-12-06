@@ -1,5 +1,6 @@
 package ua.orlov.springcoregym.dto.trainer;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class TrainerFullResponse {
 
     private TrainingTypeResponse specialization;
 
+    @JsonProperty("isActive")
     private boolean isActive;
 
     private List<TraineeNamesResponse> trainees;

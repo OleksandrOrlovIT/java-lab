@@ -408,7 +408,7 @@ public class TrainingControllerIT {
         request.setTrainingDate(LocalDate.parse("2024-10-01"));
         request.setTrainingTypeId(1L);
         request.setTraineeUsername("NONEXISTENTTRAINEE");
-        request.setTrainerUsername("testtrainer2");
+        request.setTrainerUsername("testtrainer");
 
         StringEntity entity = new StringEntity(objectMapper.writeValueAsString(request), ContentType.APPLICATION_JSON);
 
@@ -417,8 +417,8 @@ public class TrainingControllerIT {
         post.setEntity(entity);
 
         try (CloseableHttpResponse response = httpClient.execute(post)) {
-            assertEquals(403, response.getStatusLine().getStatusCode());
-            assertEquals("{\"message\":\"Access Denied\",\"status\":\"FORBIDDEN\"}",
+            assertEquals(404, response.getStatusLine().getStatusCode());
+            assertEquals("{\"message\":\"Trainee not found NONEXISTENTTRAINEE\",\"status\":\"NOT_FOUND\"}",
                     EntityUtils.toString(response.getEntity()));
         }
     }
