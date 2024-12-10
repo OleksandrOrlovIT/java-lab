@@ -17,6 +17,7 @@ public class TrainerController {
 
     @PostMapping("/workload")
     public ResponseEntity<String> changeWorkLoad(@RequestBody @Validated TrainerWorkload trainerWorkload) {
+        System.out.println("Change workload controller");
         trainerService.changeTrainerWorkload(trainerWorkload);
 
         return ResponseEntity.ok("Workload changed");

@@ -78,7 +78,10 @@ public class TrainerServiceImpl implements TrainerService {
 
         monthSummary.setDuration(monthSummary.getDuration() + trainerWorkload.getTrainingDurationMinutes());
 
+
+        System.out.println("Near save");
         trainerRepository.save(trainer);
+        System.out.println("Problem with saving");
     }
 
     private void deleteTrainerWorkload(TrainerWorkload trainerWorkload) {
