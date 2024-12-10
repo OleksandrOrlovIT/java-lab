@@ -257,12 +257,11 @@ public class TrainerServiceImplTest {
         trainer.setYears(yearSummaries);
 
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
-        when(trainerRepository.save(any())).thenReturn(new Trainer());
 
         assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         verify(trainerRepository).findByUsername(any());
-        verify(trainerRepository).save(any());
+        verify(trainerRepository).delete(any());
     }
 
     @Test

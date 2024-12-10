@@ -79,9 +79,7 @@ public class TrainerServiceImpl implements TrainerService {
         monthSummary.setDuration(monthSummary.getDuration() + trainerWorkload.getTrainingDurationMinutes());
 
 
-        System.out.println("Near save");
         trainerRepository.save(trainer);
-        System.out.println("Problem with saving");
     }
 
     private void deleteTrainerWorkload(TrainerWorkload trainerWorkload) {
@@ -116,7 +114,11 @@ public class TrainerServiceImpl implements TrainerService {
             trainer.getYears().remove(yearSummary);
         }
 
-        trainerRepository.save(trainer);
+        if(trainer.getYears().isEmpty()) {
+            trainerRepository.delete(trainer);
+        } else {
+            trainerRepository.save(trainer);
+        }
     }
 
 }

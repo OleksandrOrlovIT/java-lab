@@ -9,30 +9,28 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.containers.MongoDBContainer;
 import ua.orlov.gymtrainerworkload.GymTrainerWorkloadApplication;
-import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.model.HttpRequest;
+import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.service.message.MessageReceiver;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = GymTrainerWorkloadApplication.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CucumberSpringConfiguration extends AbstractIntegrationTest {
+public class CucumberSpringConfiguration {
 
     @LocalServerPort
     protected int randomServerPort;
@@ -49,11 +47,15 @@ public class CucumberSpringConfiguration extends AbstractIntegrationTest {
     private CloseableHttpResponse response;
 
     @Autowired
+    private MongoDBContainer mongoDBContainer;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     @After
     public void tearDown() throws IOException {
         response.close();
+        mongoTemplate.dropCollection(Trainer.class);
     }
 
     public HttpRequest createHttpRequest(String uri, String method) {
@@ -66,18 +68,6 @@ public class CucumberSpringConfiguration extends AbstractIntegrationTest {
 
     public CloseableHttpResponse getCurrentResponse() {
         return response;
-    }
-
-    @Test
-    void testMongoDBConnection() {
-        // Insert and query a test document
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setTrainerUsername("user");
-        mongoTemplate.save(trainerWorkload, "testCollection");
-        TrainerWorkload retrievedDocument = mongoTemplate.findById("testId", TrainerWorkload.class, "testCollection");
-
-        assertThat(retrievedDocument).isNotNull();
-        assertThat(retrievedDocument.getTrainerUsername()).isEqualTo("user");
     }
 
     @Then("the response status should be {int}")
