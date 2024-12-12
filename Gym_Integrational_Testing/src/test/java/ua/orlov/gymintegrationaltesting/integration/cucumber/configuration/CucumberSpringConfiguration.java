@@ -72,13 +72,6 @@ public class CucumberSpringConfiguration {
         }
     }
 
-//    @AfterAll
-//    public static void tearDownEnvironment() throws InterruptedException {
-//        // Comment this out during debugging to keep containers running
-//        // environment.stop();
-//        Thread.sleep(1000000);
-//    }
-
     public HttpRequest createSpringGymHttpRequest(String uri, String method) {
         return new HttpRequest(gymUrl + uri, method);
     }
