@@ -5,13 +5,10 @@ spring:
 server:
   ssl:
     enabled: true
-    key-store: classpath:myCertificate.jks
+    key-store: classpath:spring-boot-gym.p12
     key-store-type: PKCS12
-    key-store-password: rootroot
-    trust-store: classpath:myCertificate.jks
+    key-store-password: mysecurepassword
+    trust-store: classpath:truststore.p12
     trust-store-type: PKCS12
-    trust-store-password: rootroot
-    protocol: TLS
-    enabled-protocols: TLSv1.2,TLSv1.3
-    ciphers: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    trust-store-password: truststorepassword
   port: 0

@@ -225,9 +225,6 @@ public class TrainingSteps {
 
     @When("the user sends request to delete training with saved trainingId")
     public void deleteTrainingWithSavedTrainingId() throws Exception {
-        for (Training training : trainingService.getAll()) {
-            System.out.println("Training: " + training);
-        }
         Long trainingId = trainingFullResponse.getTrainingId();
         HttpRequest delete =
                 configuration.createHttpRequest("/api/v1/training?trainingId=" + trainingId, "DELETE");

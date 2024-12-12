@@ -13,7 +13,7 @@ import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 @Suite
 @IncludeEngines("cucumber")
 @SelectDirectories("src/test/resources/features")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "ua.orlov.gymintegratinonaltesting.integratio.cucumber")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "ua.orlov.gymintegrationaltesting.integration.cucumber")
 @ConfigurationParameter(key = Constants.PLUGIN_PUBLISH_QUIET_PROPERTY_NAME, value = "true")
 public class CucumberSuite {
 }

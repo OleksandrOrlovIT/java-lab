@@ -1,5 +1,6 @@
 package ua.orlov.gymintegrationaltesting.integration.cucumber.step;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
@@ -30,9 +31,10 @@ public class TrainerWorkloadStep {
     public void theTrainerSummaryShouldEqualToBody(String jsonPayload) throws Exception {
         CloseableHttpResponse response = configuration.getCurrentResponse();
 
-        String actualBody = objectMapper.readTree(response.getEntity().getContent()).get("body").toString();
+        JsonNode expectedJson = objectMapper.readTree(jsonPayload);
+        JsonNode actualJson = objectMapper.readTree(response.getEntity().getContent());
 
-        assertEquals(jsonPayload, actualBody);
+        assertEquals(expectedJson, actualJson, "The JSON responses do not match");
     }
 
 }

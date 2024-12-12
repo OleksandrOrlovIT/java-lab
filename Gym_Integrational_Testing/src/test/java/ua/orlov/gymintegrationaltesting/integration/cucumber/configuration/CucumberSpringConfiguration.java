@@ -3,10 +3,12 @@ package ua.orlov.gymintegrationaltesting.integration.cucumber.configuration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.spring.CucumberContextConfiguration;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -34,18 +36,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CucumberSpringConfiguration {
 
-    @Autowired
-    protected CloseableHttpClient httpClient;
-
-    @Autowired
-    protected ObjectMapper objectMapper;
-
-    private CloseableHttpResponse response;
-
     @Container
     static ComposeContainer environment = new ComposeContainer(new File("compose.yml"))
             .withLocalCompose(true)
-            .withServices("gym-trainer-workload", "spring-boot-gym");
+            .withExposedService("gym-trainer-workload", 8080,
+                    Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(40)))
+            .withExposedService("spring-boot-gym", 8443,
+                    Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(40)));
 
     private static String workloadUrl;
     private static String gymUrl;
@@ -53,21 +50,34 @@ public class CucumberSpringConfiguration {
     @BeforeAll
     public static void setUpUrls() {
         environment.start();
-//        workloadUrl = "https://" + environment.getServiceHost("gym-trainer-workload", 8080)
-//                + ":" + environment.getServicePort("gym-trainer-workload", 8080);
-//
-//        gymUrl = "https://" + environment.getServiceHost("spring-boot-gym", 8443)
-//                + ":" + environment.getServicePort("spring-boot-gym", 8443);
-        workloadUrl = "https://localhost:8080";
-        gymUrl = "https://localhost:8443";
+        workloadUrl = "https://" + environment.getServiceHost("gym-trainer-workload", 8080)
+                + ":" + environment.getServicePort("gym-trainer-workload", 8080);
+
+        gymUrl = "https://" + environment.getServiceHost("spring-boot-gym", 8443)
+                + ":" + environment.getServicePort("spring-boot-gym", 8443);
     }
 
+    @Autowired
+    protected CloseableHttpClient httpClient;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    private static CloseableHttpResponse response;
+
     @After
-    public void tearDown() throws IOException {
+    public void cleanUp() throws IOException {
         if(response != null) {
             response.close();
         }
     }
+
+//    @AfterAll
+//    public static void tearDownEnvironment() throws InterruptedException {
+//        // Comment this out during debugging to keep containers running
+//        // environment.stop();
+//        Thread.sleep(1000000);
+//    }
 
     public HttpRequest createSpringGymHttpRequest(String uri, String method) {
         return new HttpRequest(gymUrl + uri, method);
@@ -78,6 +88,9 @@ public class CucumberSpringConfiguration {
     }
 
     public void executeRequest(HttpRequest request) throws Exception {
+        if(response != null) {
+            response.close();
+        }
         response = httpClient.execute(request);
     }
 

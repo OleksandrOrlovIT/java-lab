@@ -11,12 +11,12 @@ spring:
 server:
   ssl:
     enabled: true
-    key-store: classpath:myCertificate.jks
+    key-store: classpath:spring-boot-gym.p12
     key-store-type: PKCS12
-    key-store-password: rootroot
-    trust-store: classpath:myCertificate.jks
+    key-store-password: mysecurepassword
+    trust-store: classpath:truststore.p12
     trust-store-type: PKCS12
-    trust-store-password: rootroot
+    trust-store-password: truststorepassword
   port: 0
 
 logging:
