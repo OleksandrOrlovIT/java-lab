@@ -26,7 +26,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
     """
     {
       "traineeUsername": "asd.asd",
-      "trainerUsername": "a.b"  ,
+      "trainerUsername": "a.b",
       "trainingName": "string",
       "trainingDate": "2024-01-09",
       "trainingDurationMinutes": 10,
