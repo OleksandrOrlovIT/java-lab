@@ -40,7 +40,7 @@ Feature: Trainer controller scenarios
           "months": [
             {
               "month": 10,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }
@@ -78,7 +78,7 @@ Feature: Trainer controller scenarios
           "months": [
             {
               "month": 10,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }
