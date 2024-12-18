@@ -1,6 +1,5 @@
 package ua.orlov.gymintegrationaltesting.integration.cucumber.step;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
@@ -10,12 +9,10 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import ua.orlov.gymintegrationaltesting.integration.cucumber.configuration.CucumberSpringConfiguration;
-import ua.orlov.gymintegrationaltesting.model.HttpRequest;
+import ua.orlov.gymintegrationaltesting.integration.cucumber.model.HttpRequest;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SpringGymStep {

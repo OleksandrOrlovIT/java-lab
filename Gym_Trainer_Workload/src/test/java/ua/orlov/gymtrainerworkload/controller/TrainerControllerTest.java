@@ -55,7 +55,7 @@ class TrainerControllerTest {
         trainerWorkload.setTrainerUsername("username");
         trainerWorkload.setTrainerFirstName("firstName");
         trainerWorkload.setTrainerLastName("lastName");
-        trainerWorkload.setTrainerIsActive(true);
+        trainerWorkload.setTrainerActive(true);
         trainerWorkload.setTrainingDate(LocalDate.MIN);
         trainerWorkload.setTrainingDurationMinutes(50);
         trainerWorkload.setActionType(ActionType.ADD);

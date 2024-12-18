@@ -6,15 +6,11 @@ import ua.orlov.springcoregym.dto.trainee.TraineeFullResponse;
 import ua.orlov.springcoregym.dto.trainee.TraineeFullUsernameResponse;
 import ua.orlov.springcoregym.dto.trainer.TrainerFullResponse;
 import ua.orlov.springcoregym.dto.trainer.TrainerFullUsernameResponse;
-import ua.orlov.springcoregym.dto.user.UsernameUser;
 import ua.orlov.springcoregym.mapper.trainee.TraineeMapper;
 import ua.orlov.springcoregym.mapper.trainer.TrainerMapper;
 import ua.orlov.springcoregym.mapper.trainingtype.TrainingTypeMapper;
 import ua.orlov.springcoregym.model.user.Trainee;
 import ua.orlov.springcoregym.model.user.Trainer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @AllArgsConstructor

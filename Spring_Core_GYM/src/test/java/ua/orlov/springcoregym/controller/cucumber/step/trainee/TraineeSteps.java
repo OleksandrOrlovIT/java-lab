@@ -2,7 +2,6 @@ package ua.orlov.springcoregym.controller.cucumber.step.trainee;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
@@ -11,7 +10,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ua.orlov.springcoregym.controller.cucumber.configuration.CucumberSpringConfiguration;
@@ -238,9 +236,9 @@ public class TraineeSteps {
         configuration.executeRequestWithAuthToken(patch);
     }
 
-    @When("user activate or deactivate trainee with username {string} and isActive {string}")
-    public void activateDeactivateTraineeWithBody(String username, String isActive) throws Exception {
-        UsernameIsActiveUser request = new UsernameIsActiveUser(username, Boolean.parseBoolean(isActive));
+    @When("user activate or deactivate trainee with username {string} and active {string}")
+    public void activateDeactivateTraineeWithBody(String username, String active) throws Exception {
+        UsernameIsActiveUser request = new UsernameIsActiveUser(username, Boolean.parseBoolean(active));
         StringEntity entity = new StringEntity(objectMapper.writeValueAsString(request), ContentType.APPLICATION_JSON);
 
         HttpRequest patch = configuration.createHttpRequest("/api/v1/trainee/active", "PATCH");

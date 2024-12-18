@@ -69,7 +69,7 @@ public class TrainerMapper {
         trainerWorkload.setTrainerUsername(trainer.getUsername());
         trainerWorkload.setTrainerFirstName(trainer.getFirstName());
         trainerWorkload.setTrainerLastName(trainer.getLastName());
-        trainerWorkload.setTrainerIsActive(trainer.isActive());
+        trainerWorkload.setTrainerActive(trainer.isActive());
         trainerWorkload.setTrainingDate(training.getTrainingDate());
         trainerWorkload.setTrainingDurationMinutes(training.getTrainingDurationMinutes());
         trainerWorkload.setActionType(actionType);

@@ -42,7 +42,7 @@ public interface TrainerService {
      *
      * @param trainer the trainer entity to update
      * @return the updated {@link Trainer} entity
-     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the isActive field is changed during the update
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the active field is changed during the update
      */
     Trainer update(Trainer trainer);
 
@@ -135,7 +135,7 @@ public interface TrainerService {
      * Activates or deactivates a trainer based on the specified status.
      *
      * @param trainerUsername the username of the trainer to update
-     * @param isActive true to activate the trainer; false to deactivate
+     * @param active true to activate the trainer; false to deactivate
      */
-    void activateDeactivateTrainer(String trainerUsername, boolean isActive);
+    void activateDeactivateTrainer(String trainerUsername, boolean active);
 }

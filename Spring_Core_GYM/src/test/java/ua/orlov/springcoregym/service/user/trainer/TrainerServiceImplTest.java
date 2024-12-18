@@ -87,9 +87,9 @@ class TrainerServiceImplTest {
     @Test
     void updateGivenValidThenSuccess() {
         Trainer trainer = Trainer.builder().id(ID).username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .isActive(true).build();
+                .active(true).build();
         Trainer updatedTrainer = Trainer.builder().username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(PASSWORD).isActive(true).build();
+                .password(PASSWORD).active(true).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
         when(trainerDao.update(any())).thenReturn(updatedTrainer);
@@ -104,9 +104,9 @@ class TrainerServiceImplTest {
     @Test
     void updateGivenValidWithWrongPasswordThenSuccess() {
         Trainer trainer = Trainer.builder().id(ID).username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(PASSWORD + "1").isActive(true).build();
+                .password(PASSWORD + "1").active(true).build();
         Trainer updatedTrainer = Trainer.builder().username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(PASSWORD).isActive(true).build();
+                .password(PASSWORD).active(true).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
         when(trainerDao.update(any())).thenReturn(updatedTrainer);
@@ -122,9 +122,9 @@ class TrainerServiceImplTest {
     void updateGivenValidWithNewPasswordThenSuccess() {
         String password2 = "2222222222";
         Trainer trainer = Trainer.builder().username(USERNAME).id(ID).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(password2).isActive(true).build();
+                .password(password2).active(true).build();
         Trainer updatedTrainer = Trainer.builder().id(ID).username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(password2).isActive(true).build();
+                .password(password2).active(true).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
         when(trainerDao.update(any())).thenReturn(updatedTrainer);
@@ -141,13 +141,13 @@ class TrainerServiceImplTest {
     void updateGivenValidWithNewPasswordAndOldUserNameThenSetsOldName() {
         String password2 = "2222222222";
         Trainer trainer = Trainer.builder().id(ID).username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(password2).isActive(true).build();
+                .password(password2).active(true).build();
         Trainer updatedTrainer = Trainer.builder().username(USERNAME).id(ID).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(password2).isActive(true).build();
+                .password(password2).active(true).build();
 
         when(trainerDao.getByUsername(any()))
                 .thenReturn(Optional.ofNullable(Trainer.builder().username(USERNAME).id(ID).firstName(FIRST_NAME)
-                        .lastName(LAST_NAME).password(password2).isActive(true).build()));
+                        .lastName(LAST_NAME).password(password2).active(true).build()));
         when(trainerDao.update(any())).thenReturn(updatedTrainer);
 
         Trainer resultTrainer = trainerService.update(trainer);
@@ -161,14 +161,14 @@ class TrainerServiceImplTest {
     void updateGivenValidWithPasswordSameLengthThenOldPassword() {
         String updatedPassword = "2222222222";
         Trainer inputtedTrainer = Trainer.builder().username(USERNAME).id(ID)
-                .firstName(FIRST_NAME).lastName(LAST_NAME).password(updatedPassword).isActive(true).build();
+                .firstName(FIRST_NAME).lastName(LAST_NAME).password(updatedPassword).active(true).build();
         Trainer updatedTrainer = Trainer.builder().username(USERNAME).id(ID)
-                .firstName(FIRST_NAME).lastName(LAST_NAME).password(updatedPassword).isActive(true).build();
+                .firstName(FIRST_NAME).lastName(LAST_NAME).password(updatedPassword).active(true).build();
 
         when(trainerDao.getByUsername(any()))
                 .thenReturn(Optional.ofNullable(Trainer.builder()
                         .username(USERNAME).id(ID).firstName(FIRST_NAME).lastName(LAST_NAME)
-                        .password(updatedPassword).isActive(true).build()));
+                        .password(updatedPassword).active(true).build()));
         when(trainerDao.update(any())).thenReturn(updatedTrainer);
 
         Trainer resultTrainer = trainerService.update(inputtedTrainer);
@@ -202,7 +202,7 @@ class TrainerServiceImplTest {
     @Test
     void createGivenValidThenSuccess() {
         Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).build();
-        Trainer createdTrainer = Trainer.builder().firstName(FIRST_NAME).lastName(LAST_NAME).isActive(false).build();
+        Trainer createdTrainer = Trainer.builder().firstName(FIRST_NAME).lastName(LAST_NAME).active(false).build();
 
         when(passwordService.generatePassword()).thenReturn(PASSWORD);
         when(userDao.getByUsername(any()))
@@ -223,8 +223,8 @@ class TrainerServiceImplTest {
 
     @Test
     void createGivenPasswordDifferentLengthAndNewNameThenSuccess() {
-        Trainer trainer = Trainer.builder().firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD + "!").isActive(true).build();
-        Trainer createdTrainer = Trainer.builder().firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(true).build();
+        Trainer trainer = Trainer.builder().firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD + "!").active(true).build();
+        Trainer createdTrainer = Trainer.builder().firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(true).build();
 
         when(passwordService.generatePassword()).thenReturn(PASSWORD);
         when(userDao.getByUsername(any())).thenReturn(Optional.empty());
@@ -246,9 +246,9 @@ class TrainerServiceImplTest {
     void createGivenPasswordThenSuccess() {
         String password2 = "2222222222";
         Trainer trainer = Trainer.builder().username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(password2).isActive(true).build();
+                .password(password2).active(true).build();
         Trainer createdTrainer = Trainer.builder().username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(password2).isActive(true).build();
+                .password(password2).active(true).build();
 
         when(userDao.getByUsername(any())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(any())).thenReturn(PASSWORD);
@@ -287,14 +287,14 @@ class TrainerServiceImplTest {
     @Test
     void updateGivenDifferentIsActiveThenException() {
         Trainer trainer = Trainer.builder().id(ID).username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(PASSWORD + "1").isActive(false).build();
+                .password(PASSWORD + "1").active(false).build();
         Trainer trainer2 = Trainer.builder().id(ID).username(USERNAME).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(PASSWORD + "1").isActive(true).build();
+                .password(PASSWORD + "1").active(true).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
 
         BusinessLogicException e = assertThrows(BusinessLogicException.class, () -> trainerService.update(trainer2));
-        assertEquals("IsActive field can't be changed in update", e.getMessage());
+        assertEquals("active field can't be changed in update", e.getMessage());
 
         verify(trainerDao, times(1)).getByUsername(any());
     }
@@ -311,7 +311,7 @@ class TrainerServiceImplTest {
 
     @Test
     void isUserNameMatchPasswordGivenValidThenSuccess() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
 
@@ -323,7 +323,7 @@ class TrainerServiceImplTest {
 
     @Test
     void isUserNameMatchPasswordGivenNullPasswordThenFalse() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).isActive(false).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).active(false).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
 
@@ -335,9 +335,9 @@ class TrainerServiceImplTest {
 
     @Test
     void isUserNameMatchPasswordGivenWrongPasswordThenException() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
         Trainer trainerWithWrongPassword =
-                Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD + "!").isActive(false).build();
+                Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD + "!").active(false).build();
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
 
@@ -350,11 +350,11 @@ class TrainerServiceImplTest {
     @Test
     void isUserNameMatchPasswordGivenValidPasswordThenSuccess() {
         String newPassword = "newPass";
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
         Trainer trainerWithWrongPassword =
-                Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
+                Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
         Trainer trainerWithNewPassword =
-                Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(newPassword).isActive(false).build();
+                Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(newPassword).active(false).build();
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
         when(trainerDao.update(any())).thenReturn(trainer);
@@ -369,7 +369,7 @@ class TrainerServiceImplTest {
 
     @Test
     void activateTrainerGivenActivatedTrainerThenException() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(true).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(true).build();
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
 
@@ -381,8 +381,8 @@ class TrainerServiceImplTest {
 
     @Test
     void activateTrainerGivenNonActivatedTrainerThenSuccess() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
-        Trainer trainer2 = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(true).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
+        Trainer trainer2 = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(true).build();
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
         when(trainerDao.update(any())).thenReturn(trainer2);
@@ -395,7 +395,7 @@ class TrainerServiceImplTest {
 
     @Test
     void deactivateTrainerGivenDeactivatedTrainerThenException() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
 
@@ -407,8 +407,8 @@ class TrainerServiceImplTest {
 
     @Test
     void deactivateTrainerGivenActivatedTrainerThenSuccess() {
-        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(true).build();
-        Trainer trainer2 = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).isActive(false).build();
+        Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(true).build();
+        Trainer trainer2 = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME).password(PASSWORD).active(false).build();
 
         when(trainerDao.getById(any())).thenReturn(Optional.of(trainer));
         when(trainerDao.update(any())).thenReturn(trainer2);
@@ -519,8 +519,8 @@ class TrainerServiceImplTest {
 
     @Test
     void activateDeactivateTrainerThenDeActivate() {
-        when(trainerDao.getByUsername(any())).thenReturn(Optional.of(Trainer.builder().isActive(true).build()));
-        when(trainerDao.getById(any())).thenReturn(Optional.of(Trainer.builder().isActive(true).build()));
+        when(trainerDao.getByUsername(any())).thenReturn(Optional.of(Trainer.builder().active(true).build()));
+        when(trainerDao.getById(any())).thenReturn(Optional.of(Trainer.builder().active(true).build()));
         when(trainerDao.update(any())).thenReturn(new Trainer());
 
         trainerService.activateDeactivateTrainer("someName", false);
@@ -532,8 +532,8 @@ class TrainerServiceImplTest {
 
     @Test
     void activateDeactivateTrainerThenActivated() {
-        when(trainerDao.getByUsername(any())).thenReturn(Optional.of(Trainer.builder().isActive(false).build()));
-        when(trainerDao.getById(any())).thenReturn(Optional.of(Trainer.builder().isActive(false).build()));
+        when(trainerDao.getByUsername(any())).thenReturn(Optional.of(Trainer.builder().active(false).build()));
+        when(trainerDao.getById(any())).thenReturn(Optional.of(Trainer.builder().active(false).build()));
         when(trainerDao.update(any())).thenReturn(new Trainer());
 
         trainerService.activateDeactivateTrainer("someName", true);
@@ -547,7 +547,7 @@ class TrainerServiceImplTest {
     void isUserNameMatchPasswordGivenWrongPasswordThenFalse() {
         String wrongPassword = "newPass";
         Trainer trainer = Trainer.builder().id(ID).firstName(FIRST_NAME).lastName(LAST_NAME)
-                .password(PASSWORD).isActive(false).build();
+                .password(PASSWORD).active(false).build();
 
         when(trainerDao.getByUsername(any())).thenReturn(Optional.of(trainer));
 

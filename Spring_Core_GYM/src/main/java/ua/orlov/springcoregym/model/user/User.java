@@ -3,7 +3,6 @@ package ua.orlov.springcoregym.model.user;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,7 +34,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column
-    private boolean isActive;
+    private boolean active;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

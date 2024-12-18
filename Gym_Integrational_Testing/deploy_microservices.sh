@@ -3,7 +3,7 @@
 # Set variables
 GITLAB_TOKEN=""
 GIT_REPO="git@git.epam.com:oleksandr_orlov/java-lab.git"
-BRANCH="cucumber_testing_integrational"
+BRANCH="main"
 CLONE_DIR="java-lab-clone"
 TARGET_DIR="src/main/resources"
 

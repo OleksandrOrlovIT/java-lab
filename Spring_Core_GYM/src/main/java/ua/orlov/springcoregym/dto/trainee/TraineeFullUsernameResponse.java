@@ -26,8 +26,8 @@ public class TraineeFullUsernameResponse {
 
     private String address;
 
-    @JsonProperty("isActive")
-    private boolean isActive;
+    @JsonProperty("active")
+    private boolean active;
 
     private List<TrainerResponse> trainers;
 }

@@ -17,7 +17,7 @@ Feature: Trainer controller scenarios
       "trainerUsername": "username",
       "trainerFirstName": "firstName",
       "trainerLastName": "lastName",
-      "trainerIsActive": "true",
+      "trainerActive": "true",
       "trainingDate": "2020-10-10",
       "trainingDurationMinutes": "50",
       "actionType": "ADD"
@@ -55,7 +55,7 @@ Feature: Trainer controller scenarios
       "trainerUsername": "username",
       "trainerFirstName": "firstName",
       "trainerLastName": "lastName",
-      "trainerIsActive": "true",
+      "trainerActive": "true",
       "trainingDate": "2020-10-10",
       "trainingDurationMinutes": "50",
       "actionType": "ADD"
@@ -91,7 +91,7 @@ Feature: Trainer controller scenarios
       "trainerUsername": "username",
       "trainerFirstName": "firstName",
       "trainerLastName": "lastName",
-      "trainerIsActive": "true",
+      "trainerActive": "true",
       "trainingDate": "2020-10-10",
       "trainingDurationMinutes": "50",
       "actionType": "DELETE"
@@ -110,7 +110,7 @@ Feature: Trainer controller scenarios
       "trainerUsername": "username",
       "trainerFirstName": "firstName",
       "trainerLastName": "lastName",
-      "trainerIsActive": "true",
+      "trainerActive": "true",
       "trainingDate": "2020-10-10",
       "trainingDurationMinutes": "50",
       "actionType": "DELETE"

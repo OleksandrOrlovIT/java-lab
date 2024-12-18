@@ -79,7 +79,7 @@ public class TrainerServiceImplTest {
         TrainerWorkload trainerWorkload = new TrainerWorkload();
         trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
         trainerWorkload.setActionType(ActionType.ADD);
-        trainerWorkload.setTrainerIsActive(true);
+        trainerWorkload.setTrainerActive(true);
         trainerWorkload.setTrainingDurationMinutes(1);
 
         trainerServiceImpl.changeTrainerWorkload(trainerWorkload);

@@ -43,7 +43,7 @@ public class TrainerServiceImpl implements TrainerService {
         trainer.setPassword(foundTrainer.getPassword());
 
         if (foundTrainer.isActive() != trainer.isActive()) {
-            throw new BusinessLogicException("IsActive field can't be changed in update");
+            throw new BusinessLogicException("active field can't be changed in update");
         }
 
         trainer = trainerDAO.update(trainer);
@@ -201,10 +201,10 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Transactional
     @Override
-    public void activateDeactivateTrainer(String trainerUsername, boolean isActive) {
+    public void activateDeactivateTrainer(String trainerUsername, boolean active) {
         Trainer trainer = getByUsername(trainerUsername);
 
-        if (!isActive) {
+        if (!active) {
             deactivateTrainer(trainer.getId());
         } else {
             activateTrainer(trainer.getId());

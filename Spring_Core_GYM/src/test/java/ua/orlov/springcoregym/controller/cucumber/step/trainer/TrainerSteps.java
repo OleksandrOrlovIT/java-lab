@@ -218,9 +218,9 @@ public class TrainerSteps {
         configuration.executeRequestWithAuthToken(patch);
     }
 
-    @When("user activate or deactivate trainer with username {string} and isActive {string}")
-    public void activateDeactivateTrainerWithBody(String username, String isActive) throws Exception {
-        UsernameIsActiveUser request = new UsernameIsActiveUser(username, Boolean.parseBoolean(isActive));
+    @When("user activate or deactivate trainer with username {string} and active {string}")
+    public void activateDeactivateTrainerWithBody(String username, String active) throws Exception {
+        UsernameIsActiveUser request = new UsernameIsActiveUser(username, Boolean.parseBoolean(active));
         StringEntity entity = new StringEntity(objectMapper.writeValueAsString(request), ContentType.APPLICATION_JSON);
 
         HttpRequest patch = configuration.createHttpRequest("/api/v1/trainer/active", "PATCH");
