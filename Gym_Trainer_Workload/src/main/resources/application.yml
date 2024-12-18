@@ -1,29 +1,21 @@
 spring:
   application:
     name: GYM-TRAINER-WORKLOAD
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: ${H2_USERNAME}
-    password: ${H2_PASSWORD}
-
   jpa:
     hibernate:
       ddl-auto: update
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_PASSWORD}@mongodb:27017/${MONGODB_DB_NAME}?authSource=admin
+      database: ${MONGODB_DB_NAME}
 
 server:
   ssl:
     enabled: true
-    key-store: classpath:myCertificate.jks
+    key-store: classpath:spring-boot-gym.p12
     key-store-type: PKCS12
     key-store-password: ${KEY_STORE_PASSWORD}
-    trust-store: classpath:myCertificate.jks
+    trust-store: classpath:truststore.p12
     trust-store-type: PKCS12
     trust-store-password: ${TRUST_STORE_PASSWORD}
   port: 8080

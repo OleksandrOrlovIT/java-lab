@@ -1,13 +1,14 @@
 package ua.orlov.gymtrainerworkload.mapper;
 
 import org.springframework.stereotype.Component;
-import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.model.Month;
+import ua.orlov.gymtrainerworkload.model.MonthSummary;
 import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.Training;
+import ua.orlov.gymtrainerworkload.model.YearSummary;
 
-import java.util.Map;
+import java.util.List;
+
 
 @Component
 public class TrainerMapper {
@@ -17,27 +18,19 @@ public class TrainerMapper {
         trainer.setUsername(trainerWorkload.getTrainerUsername());
         trainer.setFirstName(trainerWorkload.getTrainerFirstName());
         trainer.setLastName(trainerWorkload.getTrainerLastName());
-        trainer.setActive(trainerWorkload.isTrainerIsActive());
+        trainer.setStatus(trainerWorkload.isTrainerIsActive());
+
+        MonthSummary monthSummary = new MonthSummary();
+        monthSummary.setMonth(Month.fromOrder(trainerWorkload.getTrainingDate().getMonthValue()));
+        monthSummary.setDurationMinutes(trainerWorkload.getTrainingDurationMinutes());
+
+        YearSummary yearSummary = new YearSummary();
+        yearSummary.setYear(trainerWorkload.getTrainingDate().getYear());
+        yearSummary.setMonths(List.of(monthSummary));
+
+        trainer.setYears(List.of(yearSummary));
 
         return trainer;
     }
 
-    public TrainerSummary trainerToTrainerSummary(Trainer trainer, Map<Integer, Map<Month, Integer>> durations) {
-        TrainerSummary trainerSummary = new TrainerSummary();
-        trainerSummary.setUsername(trainer.getUsername());
-        trainerSummary.setFirstName(trainer.getFirstName());
-        trainerSummary.setLastName(trainer.getLastName());
-        trainerSummary.setStatus(trainer.isActive());
-        trainerSummary.setTrainingMinutesByYearAndMonth(durations);
-        return trainerSummary;
-    }
-
-    public Training trainerWorkloadToTraining(TrainerWorkload trainerWorkload, Trainer trainer) {
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setTrainingDate(trainerWorkload.getTrainingDate());
-        training.setDurationMinutes(trainerWorkload.getTrainingDurationMinutes());
-
-        return training;
-    }
 }

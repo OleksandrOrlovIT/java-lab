@@ -5,18 +5,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 import ua.orlov.gymtrainerworkload.mapper.TrainerMapper;
-import ua.orlov.gymtrainerworkload.model.ActionType;
-import ua.orlov.gymtrainerworkload.model.Month;
-import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.Training;
+import ua.orlov.gymtrainerworkload.model.*;
 import ua.orlov.gymtrainerworkload.repository.TrainerRepository;
-import ua.orlov.gymtrainerworkload.repository.TrainingRepository;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,9 +28,6 @@ public class TrainerServiceImplTest {
 
     @Mock
     private TrainerRepository trainerRepository;
-
-    @Mock
-    private TrainingRepository trainingRepository;
 
     @Mock
     private TrainerMapper trainerMapper;
@@ -52,7 +48,7 @@ public class TrainerServiceImplTest {
     void findByUsernameThenException() {
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.empty());
 
-        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerServiceImpl.findByUsername(USERNAME));
+        var e = assertThrows(NoSuchElementException.class, () -> trainerServiceImpl.findByUsername(USERNAME));
         assertEquals("Trainer doesn't exist with username = " + USERNAME, e.getMessage());
     }
 
@@ -66,146 +62,257 @@ public class TrainerServiceImplTest {
     }
 
     @Test
-    void changeTrainerWorkloadThenCreatesNewTrainerAndTraining() {
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setActionType(ActionType.ADD);
-
-        when(trainerRepository.save(any())).thenReturn(new Trainer());
-        when(trainerRepository.existsByUsername(any())).thenReturn(false);
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-        when(trainingRepository.save(any())).thenReturn(new Training());
-
-        assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
-
-        verify(trainerRepository, times(1)).save(any());
-        verify(trainerRepository, times(1)).existsByUsername(any());
-        verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingRepository, times(1)).save(any());
-    }
-
-    @Test
-    void changeTrainerWorkloadThenCreatesNewTraining() {
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setActionType(ActionType.ADD);
-
-        when(trainerRepository.existsByUsername(any())).thenReturn(true);
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-        when(trainingRepository.save(any())).thenReturn(new Training());
-
-        assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
-
-        verify(trainerRepository, times(1)).existsByUsername(any());
-        verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingRepository, times(1)).save(any());
-    }
-
-    @Test
-    void trainerExistsByUsernameThenSuccess() {
-        when(trainerRepository.existsByUsername(any())).thenReturn(true);
+    void trainerExistsByIdThenSuccess() {
+        when(trainerRepository.existsById(any())).thenReturn(true);
 
         assertTrue(trainerServiceImpl.trainerExistsByUsername(USERNAME));
 
-        verify(trainerRepository, times(1)).existsByUsername(any());
+        verify(trainerRepository, times(1)).existsById(any());
     }
 
     @Test
-    void createTrainingThenSuccess() {
-        when(trainingRepository.save(any())).thenReturn(new Training());
+    void changeTrainerWorkloadThenCreateTrainer() {
+        when(trainerRepository.existsById(any())).thenReturn(false);
+        when(trainerRepository.save(any())).thenReturn(new Trainer());
+        when(trainerMapper.trainerWorkloadToTrainer(any())).thenReturn(new Trainer());
 
-        Training training = trainerServiceImpl.createTraining(any());
-
-        assertNotNull(training);
-        verify(trainingRepository, times(1)).save(any());
-    }
-
-    @Test
-    void deleteTrainingThenSuccess() {
-        when(trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any()))
-                .thenReturn(Optional.of(new Training()));
-
-        Training training = new Training();
-        training.setTrainer(new Trainer());
-        trainerServiceImpl.deleteTraining(training);
-
-        verify(trainingRepository, times(1))
-                .findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any());
-        verify(trainingRepository, times(1)).delete(any());
-    }
-
-    @Test
-    void deleteTrainingThenNullPointerException() {
-        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerServiceImpl.deleteTraining(new Training()));
-
-        assertEquals("Trainer must not be null", e.getMessage());
-    }
-
-    @Test
-    void deleteTrainingThenNoSuchElementException() {
-        when(trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any()))
-                .thenReturn(Optional.empty());
-
-        Training training = new Training();
-        training.setTrainer(new Trainer());
-
-        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerServiceImpl.deleteTraining(training));
-
-        assertEquals("No training found for trainer 'null' on null with duration null", e.getMessage());
-
-        verify(trainingRepository, times(1))
-                .findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any());
-    }
-
-    @Test
-    void findAllTrainingsByTrainerThenSuccess() {
-        when(trainingRepository.findByTrainer(any())).thenReturn(new ArrayList<>());
-
-        assertNotNull(trainerServiceImpl.findAllTrainingsByTrainer(new Trainer()));
-
-        verify(trainingRepository, times(1)).findByTrainer(any());
-    }
-
-    @Test
-    void changeTrainerWorkloadThenDelete() {
         TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setActionType(ActionType.DELETE);
-
-        Training training = new Training();
-        training.setTrainer(new Trainer());
-
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-        when(trainerMapper.trainerWorkloadToTraining(any(), any())).thenReturn(training);
-        when(trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any()))
-                .thenReturn(Optional.of(new Training()));
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.ADD);
+        trainerWorkload.setTrainerIsActive(true);
+        trainerWorkload.setTrainingDurationMinutes(1);
 
         trainerServiceImpl.changeTrainerWorkload(trainerWorkload);
 
-        verify(trainerRepository).findByUsername(any());
-        verify(trainerMapper).trainerWorkloadToTraining(any(), any());
-        verify(trainingRepository).findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any());
-        verify(trainingRepository).delete(any());
+        verify(trainerRepository).existsById(any());
+        verify(trainerRepository).save(any());
+        verify(trainerMapper).trainerWorkloadToTrainer(any());
     }
 
     @Test
-    void getTrainerSummaryThenSuccess() {
+    void changeTrainerWorkloadThenAddTrainerWorkloadWithoutYear() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.ADD);
+        trainerWorkload.setTrainingDurationMinutes(1);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(11), 1));
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2019, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.existsById(any())).thenReturn(true);
+        when(trainerRepository.save(any())).thenReturn(new Trainer());
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+
+        trainerServiceImpl.changeTrainerWorkload(trainerWorkload);
+
+        verify(trainerRepository).existsById(any());
+        verify(trainerRepository).save(any());
+        verify(trainerRepository).findByUsername(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenAddTrainerWorkloadWithYearWithoutMonth() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.ADD);
+        trainerWorkload.setTrainingDurationMinutes(1);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(11), 1));
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.existsById(any())).thenReturn(true);
+        when(trainerRepository.save(any())).thenReturn(new Trainer());
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+
+        trainerServiceImpl.changeTrainerWorkload(trainerWorkload);
+
+        verify(trainerRepository).existsById(any());
+        verify(trainerRepository).save(any());
+        verify(trainerRepository).findByUsername(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenAddTrainerWorkloadWithMonth() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.ADD);
+        trainerWorkload.setTrainingDurationMinutes(1);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 1));
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.existsById(any())).thenReturn(true);
+        when(trainerRepository.save(any())).thenReturn(new Trainer());
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+
+        trainerServiceImpl.changeTrainerWorkload(trainerWorkload);
+
+        verify(trainerRepository).existsById(any());
+        verify(trainerRepository).save(any());
+        verify(trainerRepository).findByUsername(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDeleteTrainerWorkloadWithoutYearThenException() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.DELETE);
+
         Trainer trainer = new Trainer();
 
-        Training training = new Training();
-        training.setTrainer(new Trainer());
-        training.setDurationMinutes(10);
-        training.setTrainingDate(LocalDate.of(2020, 10, 10));
-
-        Map<Month, Integer> monthSummary = new HashMap<>();
-        monthSummary.put(Month.OCTOBER, 10);
-        Map<Integer, Map<Month, Integer>> yearsSummary = new HashMap<>();
-        yearsSummary.put(2020, monthSummary);
+        trainer.setYears(new ArrayList<>());
 
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
-        when(trainerMapper.trainerToTrainerSummary(any(), any())).thenReturn(new TrainerSummary());
-        when(trainingRepository.findByTrainer(any())).thenReturn(List.of(training));
 
-        assertDoesNotThrow(() -> trainerServiceImpl.getTrainerSummary(USERNAME));
+        var e = assertThrows(BusinessLogicException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+
+        assertEquals("Year not found for the trainer for = 2020", e.getMessage());
 
         verify(trainerRepository).findByUsername(any());
-        verify(trainingRepository).findByTrainer(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDeleteTrainerWorkloadWithoutMonthThenException() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.DELETE);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(11), 1));
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+
+        var e = assertThrows(BusinessLogicException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+
+        assertEquals("Month not found for the trainer for = 10", e.getMessage());
+
+        verify(trainerRepository).findByUsername(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDeleteTrainerWorkloadWithWrongDurationThenException() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.DELETE);
+        trainerWorkload.setTrainingDurationMinutes(2);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 1));
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+
+        var e = assertThrows(BusinessLogicException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+
+        assertEquals("Training duration cannot be negative", e.getMessage());
+
+        verify(trainerRepository).findByUsername(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDeleteTrainerWorkloadDeletingYear() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.DELETE);
+        trainerWorkload.setTrainingDurationMinutes(1);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 1));
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+
+        assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+
+        verify(trainerRepository).findByUsername(any());
+        verify(trainerRepository).delete(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDeleteTrainerWorkloadDecreasingDuration() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.DELETE);
+        trainerWorkload.setTrainingDurationMinutes(1);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 2));
+
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+        when(trainerRepository.save(any())).thenReturn(new Trainer());
+
+        assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+
+        verify(trainerRepository).findByUsername(any());
+        verify(trainerRepository).save(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDeleteTrainerWorkloadDecreasingDurationWithDifferentYears() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setTrainingDate(LocalDate.of(2020, 10, 10));
+        trainerWorkload.setActionType(ActionType.DELETE);
+        trainerWorkload.setTrainingDurationMinutes(1);
+
+        Trainer trainer = new Trainer();
+        List<MonthSummary> monthSummaries = new ArrayList<>();
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 2));
+
+
+        List<YearSummary> yearSummaries = new ArrayList<>();
+        yearSummaries.add(new YearSummary(2019, monthSummaries));
+        yearSummaries.add(new YearSummary(2018, monthSummaries));
+        yearSummaries.add(new YearSummary(2020, monthSummaries));
+
+        trainer.setYears(yearSummaries);
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+        when(trainerRepository.save(any())).thenReturn(new Trainer());
+
+        assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+
+        verify(trainerRepository).findByUsername(any());
+        verify(trainerRepository).save(any());
     }
 }

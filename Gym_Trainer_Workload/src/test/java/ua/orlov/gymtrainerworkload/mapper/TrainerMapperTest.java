@@ -2,15 +2,14 @@ package ua.orlov.gymtrainerworkload.mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.model.Month;
+import ua.orlov.gymtrainerworkload.model.MonthSummary;
 import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.Training;
+import ua.orlov.gymtrainerworkload.model.YearSummary;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,71 +27,28 @@ class TrainerMapperTest {
     }
 
     @Test
-    void trainerWorkloadToTrainerGivenIsActiveFalseThenSuccess() {
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setTrainerUsername(USERNAME);
-        trainerWorkload.setTrainerFirstName(FIRST_NAME);
-        trainerWorkload.setTrainerLastName(LAST_NAME);
-        trainerWorkload.setTrainerIsActive(false);
+    void trainerWorkloadToTrainerThenSuccess() {
+        List<YearSummary> yearSummaries = List.of(
+                new YearSummary(2020, List.of(new MonthSummary(Month.fromOrder(1), 1)))
+        );
 
-        Trainer trainer = trainerMapper.trainerWorkloadToTrainer(trainerWorkload);
+        int duration = 1;
 
-        assertNotNull(trainer);
-        assertEquals(USERNAME, trainer.getUsername());
-        assertEquals(FIRST_NAME, trainer.getFirstName());
-        assertEquals(LAST_NAME, trainer.getLastName());
-        assertFalse(trainer.isActive());
-    }
+        TrainerWorkload workload = new TrainerWorkload();
+        workload.setTrainerUsername(USERNAME);
+        workload.setTrainerFirstName(FIRST_NAME);
+        workload.setTrainerLastName(LAST_NAME);
+        workload.setTrainerIsActive(true);
+        workload.setTrainingDurationMinutes(duration);
+        workload.setTrainingDate(LocalDate.of(2020, 1, 1));
 
-    @Test
-    void trainerWorkloadToTrainerGivenIsActiveTrueThenSuccess() {
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setTrainerUsername(USERNAME);
-        trainerWorkload.setTrainerFirstName(FIRST_NAME);
-        trainerWorkload.setTrainerLastName(LAST_NAME);
-        trainerWorkload.setTrainerIsActive(true);
+        Trainer resultTrainer = trainerMapper.trainerWorkloadToTrainer(workload);
 
-        Trainer trainer = trainerMapper.trainerWorkloadToTrainer(trainerWorkload);
-
-        assertNotNull(trainer);
-        assertEquals(USERNAME, trainer.getUsername());
-        assertEquals(FIRST_NAME, trainer.getFirstName());
-        assertEquals(LAST_NAME, trainer.getLastName());
-        assertTrue(trainer.isActive());
-    }
-
-    @Test
-    void trainerToTrainerSummaryThenSuccess() {
-        Trainer trainer = new Trainer();
-        trainer.setUsername(USERNAME);
-        trainer.setFirstName(FIRST_NAME);
-        trainer.setLastName(LAST_NAME);
-
-        Map<Integer, Map<Month, Integer>> durations = new HashMap<>();
-
-        TrainerSummary trainerSummary = trainerMapper.trainerToTrainerSummary(trainer, durations);
-
-        assertNotNull(trainerSummary);
-        assertEquals(USERNAME, trainerSummary.getUsername());
-        assertEquals(FIRST_NAME, trainerSummary.getFirstName());
-        assertEquals(LAST_NAME, trainerSummary.getLastName());
-        assertFalse(trainerSummary.isStatus());
-        assertEquals(durations, trainerSummary.getTrainingMinutesByYearAndMonth());
-    }
-
-    @Test
-    void trainerWorkloadToTrainingThenSuccess() {
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setTrainingDate(LocalDate.MIN);
-        trainerWorkload.setTrainingDurationMinutes(50);
-
-        Trainer trainer = new Trainer();
-
-        Training training = trainerMapper.trainerWorkloadToTraining(trainerWorkload, trainer);
-
-        assertNotNull(training);
-        assertEquals(trainerWorkload.getTrainingDate(), training.getTrainingDate());
-        assertEquals(trainerWorkload.getTrainingDurationMinutes(), training.getDurationMinutes());
-        assertEquals(trainer, training.getTrainer());
+        assertAll("All mapping worked correctly",
+                () -> assertEquals(USERNAME, resultTrainer.getUsername()),
+                () -> assertEquals(FIRST_NAME, resultTrainer.getFirstName()),
+                () -> assertEquals(LAST_NAME, resultTrainer.getLastName()),
+                () -> assertTrue(resultTrainer.isStatus()),
+                () -> assertEquals(yearSummaries, resultTrainer.getYears()));
     }
 }

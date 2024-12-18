@@ -1,9 +1,6 @@
 package ua.orlov.springcoregym.dto.training;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ua.orlov.springcoregym.dto.trainingtype.TrainingTypeResponse;
 
 import java.time.LocalDate;
@@ -13,6 +10,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TrainingFullResponse {
+
+    private Long trainingId;
 
     private String trainingName;
 

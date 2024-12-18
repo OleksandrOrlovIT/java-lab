@@ -9,8 +9,9 @@ TRUST_STORE_PASSWORD=<br/>
 H2_USERNAME=<br/>
 H2_PASSWORD=<br/>
 
-RABBITMQ_USER=<br/>
-RABBITMQ_PASSWORD=<br/>
+MONGODB_DB_NAME=<br/>
+MONGO_DB_USERNAME=<br/>
+MONGO_DB_PASSWORD=<br/>
 
 <h2>Commands</h2>
 <h3>Commands to build application with docker running on the machine</h2>

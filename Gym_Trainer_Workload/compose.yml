@@ -10,13 +10,43 @@ services:
     env_file:
       - .env
     environment:
-      - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=${KEY_STORE_PASSWORD} -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=${TRUST_STORE_PASSWORD}"
+      - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/spring-boot-gym.p12 -Djavax.net.ssl.keyStorePassword=${KEY_STORE_PASSWORD} -Djavax.net.ssl.trustStore=/app/resources/truststore.p12 -Djavax.net.ssl.trustStorePassword=${TRUST_STORE_PASSWORD}"
     networks:
       gym-network:
         ipv4_address: 172.18.0.6
+    depends_on:
+      mongodb:
+        condition: service_healthy
     volumes:
-      - ./src/main/resources/myCertificate.jks:/app/resources/myCertificate.jks
+      - ./src/main/resources/spring-boot-gym.p12:/app/resources/spring-boot-gym.p12
+      - ./src/main/resources/truststore.p12:/app/resources/truststore.p12
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD}
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      gym-network:
+        ipv4_address: 172.18.0.7
+    volumes:
+      - mongo_data:/data/db
 
 networks:
   gym-network:
     external: true
+
+
+volumes:
+  mongo_data:

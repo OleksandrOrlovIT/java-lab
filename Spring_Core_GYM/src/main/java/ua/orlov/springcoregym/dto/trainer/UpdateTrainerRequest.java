@@ -1,5 +1,6 @@
 package ua.orlov.springcoregym.dto.trainer;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,6 @@ public class UpdateTrainerRequest {
 
     private Long specializationId;
 
+    @JsonProperty("isActive")
     private boolean isActive;
 }

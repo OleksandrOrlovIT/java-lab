@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
 @AllArgsConstructor
@@ -23,8 +23,8 @@ public class TrainerController {
     }
 
     @GetMapping("/summary/month")
-    public TrainerSummary getSummaryMonth(@RequestParam String username) {
-        return trainerService.getTrainerSummary(username);
+    public Trainer getSummaryMonth(@RequestParam String username) {
+        return trainerService.findByUsername(username);
     }
 
 }
