@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 import ua.orlov.gymtrainerworkload.service.message.MessageReceiver;
 import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
@@ -26,13 +27,13 @@ public class RabbitMQMessageReceiver implements MessageReceiver {
         Map<String, String> messageContent = objectMapper.readValue(json, Map.class);
 
         if (!TRAINER_WORKLOAD_SUBJECT_NAME.equals(messageContent.get("subject"))) {
-            throw new IllegalArgumentException(
+            throw new BusinessLogicException(
                     "Subject mismatch with messageContent.get(\"subject\") = " + messageContent.get("subject")
             );
         }
 
         if(!messageContent.containsKey("content")) {
-            throw new IllegalArgumentException("Passed json doesn't contain content");
+            throw new BusinessLogicException("Passed json doesn't contain content");
         }
 
         changeTrainerWorkload(messageContent.get("content"));

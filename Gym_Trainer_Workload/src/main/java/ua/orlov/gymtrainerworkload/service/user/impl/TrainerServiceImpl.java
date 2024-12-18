@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 import ua.orlov.gymtrainerworkload.mapper.TrainerMapper;
-import ua.orlov.gymtrainerworkload.model.ActionType;
-import ua.orlov.gymtrainerworkload.model.MonthSummary;
-import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.YearSummary;
+import ua.orlov.gymtrainerworkload.model.*;
 import ua.orlov.gymtrainerworkload.repository.TrainerRepository;
 import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
@@ -36,11 +34,11 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public void changeTrainerWorkload(TrainerWorkload trainerWorkload) {
-        if (trainerWorkload.getActionType().equals(ActionType.ADD)) {
-            if (!trainerExistsByUsername(trainerWorkload.getTrainerUsername())) {
-                createTrainer(trainerMapper.trainerWorkloadToTrainer(trainerWorkload));
-            } else {
+        if (ActionType.ADD.equals(trainerWorkload.getActionType())) {
+            if (trainerExistsByUsername(trainerWorkload.getTrainerUsername())) {
                 addTrainerWorkload(trainerWorkload);
+            } else {
+                createTrainer(trainerMapper.trainerWorkloadToTrainer(trainerWorkload));
             }
         } else {
             deleteTrainerWorkload(trainerWorkload);
@@ -68,15 +66,16 @@ public class TrainerServiceImpl implements TrainerService {
                 });
 
         MonthSummary monthSummary = yearSummary.getMonths().stream()
-                .filter(m -> m.getMonth() == month)
+                .filter(m -> m.getMonth().getOrder() == month)
                 .findFirst()
                 .orElseGet(() -> {
-                    MonthSummary newMonth = new MonthSummary(month, 0);
+                    MonthSummary newMonth = new MonthSummary(Month.fromOrder(month), 0);
                     yearSummary.getMonths().add(newMonth);
                     return newMonth;
                 });
 
-        monthSummary.setDuration(monthSummary.getDuration() + trainerWorkload.getTrainingDurationMinutes());
+        monthSummary
+                .setDurationMinutes(monthSummary.getDurationMinutes() + trainerWorkload.getTrainingDurationMinutes());
 
 
         trainerRepository.save(trainer);
@@ -91,23 +90,23 @@ public class TrainerServiceImpl implements TrainerService {
         YearSummary yearSummary = trainer.getYears().stream()
                 .filter(y -> y.getYear() == year)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Year not found for the trainer for = " + year));
+                .orElseThrow(() -> new BusinessLogicException("Year not found for the trainer for = " + year));
 
         MonthSummary monthSummary = yearSummary.getMonths().stream()
-                .filter(m -> m.getMonth() == month)
+                .filter(m -> m.getMonth().getOrder() == month)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Month not found for the trainer for = " + month));
+                .orElseThrow(() -> new BusinessLogicException("Month not found for the trainer for = " + month));
 
-        int updatedDuration = monthSummary.getDuration() - trainerWorkload.getTrainingDurationMinutes();
+        int updatedDuration = monthSummary.getDurationMinutes() - trainerWorkload.getTrainingDurationMinutes();
 
         if (updatedDuration < 0) {
-            throw new IllegalArgumentException("Training duration cannot be negative");
+            throw new BusinessLogicException("Training duration cannot be negative");
         }
 
         if (updatedDuration == 0) {
             yearSummary.getMonths().remove(monthSummary);
         } else {
-            monthSummary.setDuration(updatedDuration);
+            monthSummary.setDurationMinutes(updatedDuration);
         }
 
         if (yearSummary.getMonths().isEmpty()) {

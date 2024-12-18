@@ -1,13 +1,7 @@
 spring:
   application:
-    name: GYM-TRAINER-WORKLOAD
-  data:
-    mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/testdb}
-      database: test_db
-  jpa:
-    hibernate:
-      ddl-auto: none
+    name: Gym_Integrational_Testing
+
 server:
   ssl:
     enabled: true
@@ -18,7 +12,3 @@ server:
     trust-store-type: PKCS12
     trust-store-password: truststorepassword
   port: 0
-
-logging:
-  level:
-    root: WARN

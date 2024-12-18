@@ -3,7 +3,6 @@ package ua.orlov.gymtrainerworkload.controller.cucumber.step;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
-import io.cucumber.java.en_scouse.An;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
