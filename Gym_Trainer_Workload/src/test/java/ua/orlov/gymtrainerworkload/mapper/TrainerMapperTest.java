@@ -3,6 +3,7 @@ package ua.orlov.gymtrainerworkload.mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.model.Month;
 import ua.orlov.gymtrainerworkload.model.MonthSummary;
 import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.model.YearSummary;
@@ -27,7 +28,9 @@ class TrainerMapperTest {
 
     @Test
     void trainerWorkloadToTrainerThenSuccess() {
-        List<YearSummary> yearSummaries = List.of(new YearSummary(2020, List.of(new MonthSummary(1, 1))));
+        List<YearSummary> yearSummaries = List.of(
+                new YearSummary(2020, List.of(new MonthSummary(Month.fromOrder(1), 1)))
+        );
 
         int duration = 1;
 

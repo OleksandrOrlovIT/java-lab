@@ -50,7 +50,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 10
+              "durationMinutes": 10
             }
           ]
         }
@@ -122,7 +122,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 10
+              "durationMinutes": 10
             }
           ]
         } ,
@@ -131,7 +131,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 10,
-              "duration": 60
+              "durationMinutes": 60
             }
           ]
         }
@@ -203,11 +203,11 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 10
+              "durationMinutes": 10
             },
             {
               "month": 10,
-              "duration": 60
+              "durationMinutes": 60
             }
           ]
         }
@@ -279,7 +279,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 70
+              "durationMinutes": 70
             }
           ]
         }
@@ -339,7 +339,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 10
+              "durationMinutes": 10
             }
           ]
         }
@@ -423,7 +423,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 60
+              "durationMinutes": 60
             }
           ]
         }
@@ -458,7 +458,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }
@@ -530,11 +530,11 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 10
+              "durationMinutes": 10
             },
             {
               "month": 11,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }
@@ -569,7 +569,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 11,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }
@@ -641,7 +641,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 1,
-              "duration": 10
+              "durationMinutes": 10
             }
           ]
         },
@@ -650,7 +650,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 11,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }
@@ -685,7 +685,7 @@ Feature: Monolith endpoints populate rabbitmq, microservice takes message and up
           "months": [
             {
               "month": 11,
-              "duration": 50
+              "durationMinutes": 50
             }
           ]
         }

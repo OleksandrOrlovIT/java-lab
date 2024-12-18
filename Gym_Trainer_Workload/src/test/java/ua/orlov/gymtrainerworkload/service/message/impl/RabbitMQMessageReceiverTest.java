@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ class RabbitMQMessageReceiverTest {
     void receiveMessageGivenNoSubjectThenException() throws JsonProcessingException {
         when(objectMapper.readValue(anyString(), eq(Map.class))).thenReturn(new HashMap<>());
 
-        var e = assertThrows(IllegalArgumentException.class, () -> rabbitMQMessageReceiver.receiveMessage(""));
+        var e = assertThrows(BusinessLogicException.class, () -> rabbitMQMessageReceiver.receiveMessage(""));
 
         assertEquals("Subject mismatch with messageContent.get(\"subject\") = null", e.getMessage());
 
@@ -51,7 +52,7 @@ class RabbitMQMessageReceiverTest {
 
         when(objectMapper.readValue(anyString(), eq(Map.class))).thenReturn(map);
 
-        var e = assertThrows(IllegalArgumentException.class, () -> rabbitMQMessageReceiver.receiveMessage(""));
+        var e = assertThrows(BusinessLogicException.class, () -> rabbitMQMessageReceiver.receiveMessage(""));
 
         assertEquals("Subject mismatch with messageContent.get(\"subject\") = " + diffSubjectName, e.getMessage());
 
@@ -66,7 +67,7 @@ class RabbitMQMessageReceiverTest {
 
         when(objectMapper.readValue(anyString(), eq(Map.class))).thenReturn(map);
 
-        var e = assertThrows(IllegalArgumentException.class, () -> rabbitMQMessageReceiver.receiveMessage(""));
+        var e = assertThrows(BusinessLogicException.class, () -> rabbitMQMessageReceiver.receiveMessage(""));
 
         assertEquals("Passed json doesn't contain content", e.getMessage());
 
