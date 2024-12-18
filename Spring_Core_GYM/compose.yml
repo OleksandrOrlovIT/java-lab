@@ -37,7 +37,7 @@ services:
     env_file:
       - .env
     environment:
-    - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=${KEY_STORE_PASSWORD} -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=${TRUST_STORE_PASSWORD}"
+    - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/spring-boot-gym.p12 -Djavax.net.ssl.keyStorePassword=${KEY_STORE_PASSWORD} -Djavax.net.ssl.trustStore=/app/resources/truststore.p12 -Djavax.net.ssl.trustStorePassword=${TRUST_STORE_PASSWORD}"
     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/${POSTGRES_DB}
     - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
     - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
@@ -53,7 +53,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src/main/resources/myCertificate.jks:/app/resources/myCertificate.jks
+      - ./src/main/resources/spring-boot-gym.p12:/app/resources/spring-boot-gym.p12
+      - ./src/main/resources/truststore.p12:/app/resources/truststore.p12
     networks:
       gym-network:
         ipv4_address: 172.18.0.5

@@ -6,11 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 import ua.orlov.gymtrainerworkload.mapper.TrainerMapper;
-import ua.orlov.gymtrainerworkload.model.ActionType;
-import ua.orlov.gymtrainerworkload.model.MonthSummary;
-import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.YearSummary;
+import ua.orlov.gymtrainerworkload.model.*;
 import ua.orlov.gymtrainerworkload.repository.TrainerRepository;
 
 import java.time.LocalDate;
@@ -100,7 +98,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(11, 1));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(11), 1));
 
         List<YearSummary> yearSummaries = new ArrayList<>();
         yearSummaries.add(new YearSummary(2019, monthSummaries));
@@ -127,7 +125,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(11, 1));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(11), 1));
 
         List<YearSummary> yearSummaries = new ArrayList<>();
         yearSummaries.add(new YearSummary(2020, monthSummaries));
@@ -154,7 +152,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(10, 1));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 1));
 
         List<YearSummary> yearSummaries = new ArrayList<>();
         yearSummaries.add(new YearSummary(2020, monthSummaries));
@@ -184,7 +182,7 @@ public class TrainerServiceImplTest {
 
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+        var e = assertThrows(BusinessLogicException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         assertEquals("Year not found for the trainer for = 2020", e.getMessage());
 
@@ -199,7 +197,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(11, 1));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(11), 1));
 
         List<YearSummary> yearSummaries = new ArrayList<>();
         yearSummaries.add(new YearSummary(2020, monthSummaries));
@@ -208,7 +206,7 @@ public class TrainerServiceImplTest {
 
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+        var e = assertThrows(BusinessLogicException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         assertEquals("Month not found for the trainer for = 10", e.getMessage());
 
@@ -224,7 +222,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(10, 1));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 1));
 
         List<YearSummary> yearSummaries = new ArrayList<>();
         yearSummaries.add(new YearSummary(2020, monthSummaries));
@@ -233,7 +231,7 @@ public class TrainerServiceImplTest {
 
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
 
-        var e = assertThrows(IllegalArgumentException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
+        var e = assertThrows(BusinessLogicException.class, () -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         assertEquals("Training duration cannot be negative", e.getMessage());
 
@@ -249,7 +247,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(10, 1));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 1));
 
         List<YearSummary> yearSummaries = new ArrayList<>();
         yearSummaries.add(new YearSummary(2020, monthSummaries));
@@ -257,12 +255,11 @@ public class TrainerServiceImplTest {
         trainer.setYears(yearSummaries);
 
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
-        when(trainerRepository.save(any())).thenReturn(new Trainer());
 
         assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         verify(trainerRepository).findByUsername(any());
-        verify(trainerRepository).save(any());
+        verify(trainerRepository).delete(any());
     }
 
     @Test
@@ -274,7 +271,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(10, 2));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 2));
 
 
         List<YearSummary> yearSummaries = new ArrayList<>();
@@ -300,7 +297,7 @@ public class TrainerServiceImplTest {
 
         Trainer trainer = new Trainer();
         List<MonthSummary> monthSummaries = new ArrayList<>();
-        monthSummaries.add(new MonthSummary(10, 2));
+        monthSummaries.add(new MonthSummary(Month.fromOrder(10), 2));
 
 
         List<YearSummary> yearSummaries = new ArrayList<>();

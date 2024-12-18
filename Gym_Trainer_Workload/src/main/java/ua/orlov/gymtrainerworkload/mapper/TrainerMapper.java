@@ -2,6 +2,7 @@ package ua.orlov.gymtrainerworkload.mapper;
 
 import org.springframework.stereotype.Component;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.model.Month;
 import ua.orlov.gymtrainerworkload.model.MonthSummary;
 import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.model.YearSummary;
@@ -20,8 +21,8 @@ public class TrainerMapper {
         trainer.setStatus(trainerWorkload.isTrainerIsActive());
 
         MonthSummary monthSummary = new MonthSummary();
-        monthSummary.setMonth(trainerWorkload.getTrainingDate().getMonthValue());
-        monthSummary.setDuration(trainerWorkload.getTrainingDurationMinutes());
+        monthSummary.setMonth(Month.fromOrder(trainerWorkload.getTrainingDate().getMonthValue()));
+        monthSummary.setDurationMinutes(trainerWorkload.getTrainingDurationMinutes());
 
         YearSummary yearSummary = new YearSummary();
         yearSummary.setYear(trainerWorkload.getTrainingDate().getYear());
