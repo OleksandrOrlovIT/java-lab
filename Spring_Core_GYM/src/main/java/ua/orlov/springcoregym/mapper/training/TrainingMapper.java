@@ -23,6 +23,7 @@ public class TrainingMapper {
 
     public TrainingFullResponse trainingToTrainingFullResponse(Training training) {
         TrainingFullResponse response = new TrainingFullResponse();
+        response.setTrainingId(training.getId());
         response.setTrainingName(training.getTrainingName());
         response.setTrainingDate(training.getTrainingDate());
         response.setTrainingType(trainingTypeMapper.trainingTypeToTrainingTypeResponse(training.getTrainingType()));

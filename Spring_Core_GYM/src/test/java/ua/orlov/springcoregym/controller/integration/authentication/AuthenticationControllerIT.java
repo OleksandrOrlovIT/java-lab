@@ -10,10 +10,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.orlov.springcoregym.controller.integration.config.LoginComponent;
@@ -132,7 +130,7 @@ public class AuthenticationControllerIT {
     }
 
     @Test
-    void changeLoginWrongPasswordThen() throws Exception {
+    void changeLoginWrongPasswordThenUnauthorized() throws Exception {
         String token = loginComponent.loginAsUser("changePasswordUser2", "password");
 
         String newPassword = "newPasswor";

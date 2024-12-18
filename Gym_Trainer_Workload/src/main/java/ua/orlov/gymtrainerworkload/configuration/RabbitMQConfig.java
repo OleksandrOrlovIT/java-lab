@@ -10,9 +10,11 @@ import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import ua.orlov.gymtrainerworkload.service.message.MessageReceiver;
 
 @Configuration
+@Profile("!test")
 public class RabbitMQConfig {
 
     private static final String DLQ_SUFFIX = ".dlq";
