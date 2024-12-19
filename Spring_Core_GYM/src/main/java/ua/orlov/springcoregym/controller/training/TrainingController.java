@@ -105,9 +105,7 @@ public class TrainingController {
     @TrainingRequestHasLoggedUser
     @PostMapping
     public ResponseEntity<?> createTraining(@RequestBody @Validated CreateTrainingRequest request){
-        Training training = trainingMapper.createTrainingRequestToTraining(request);
-
-        trainingService.create(training);
+        trainingService.createFromCreateTrainingRequest(request);
 
         return ResponseEntity.ok().build();
     }

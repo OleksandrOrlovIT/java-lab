@@ -1,87 +1,56 @@
 package ua.orlov.springcoregym.mapper.trainer;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import ua.orlov.springcoregym.dto.trainer.TrainerRegister;
 import ua.orlov.springcoregym.dto.trainer.TrainerResponse;
 import ua.orlov.springcoregym.dto.trainer.TrainerWorkload;
 import ua.orlov.springcoregym.dto.trainer.UpdateTrainerRequest;
 import ua.orlov.springcoregym.dto.user.UsernamePasswordUser;
-import ua.orlov.springcoregym.exception.BusinessLogicException;
 import ua.orlov.springcoregym.mapper.trainingtype.TrainingTypeMapper;
 import ua.orlov.springcoregym.model.ActionType;
 import ua.orlov.springcoregym.model.training.Training;
+import ua.orlov.springcoregym.model.training.TrainingType;
 import ua.orlov.springcoregym.model.user.Trainer;
-import ua.orlov.springcoregym.service.training.TrainingTypeService;
 
 import java.util.List;
 
-@Component
-@AllArgsConstructor
-@Log4j2
-public class TrainerMapper {
+@Mapper(componentModel = "spring",
+        uses = {TrainingTypeMapper.class},
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+public interface TrainerMapper {
 
-    private final TrainingTypeService trainingTypeService;
-    private final TrainingTypeMapper trainingTypeMapper;
-    private final ObjectMapper objectMapper;
+    @Mapping(target = "firstName", source = "trainerRegister.firstName")
+    @Mapping(target = "lastName", source = "trainerRegister.lastName")
+    Trainer trainerRegisterToTrainer(TrainerRegister trainerRegister);
 
-    public Trainer trainerRegisterToTrainer(TrainerRegister trainerRegister){
-        Trainer trainer = new Trainer();
-        trainer.setFirstName(trainerRegister.getFirstName());
-        trainer.setLastName(trainerRegister.getLastName());
-        trainer.setSpecialization(trainingTypeService.getById(trainerRegister.getSpecializationId()));
-        return trainer;
-    }
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "password", source = "password")
+    UsernamePasswordUser trainerToUsernamePasswordUser(Trainer trainer);
 
-    public UsernamePasswordUser trainerToUsernamePasswordUser(Trainer trainer){
-        return new UsernamePasswordUser(trainer.getUsername(), trainer.getPassword());
-    }
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "specialization", source = "specialization", qualifiedByName = "trainingTypeToTrainingTypeResponse")
+    TrainerResponse trainerToTrainerResponse(Trainer trainer);
 
-    public TrainerResponse trainerToTrainerResponse(Trainer trainer){
-        TrainerResponse trainerResponse = new TrainerResponse();
-        trainerResponse.setUsername(trainer.getUsername());
-        trainerResponse.setFirstName(trainer.getFirstName());
-        trainerResponse.setLastName(trainer.getLastName());
-        trainerResponse.setSpecialization(trainingTypeMapper.trainingTypeToTrainingTypeResponse(trainer.getSpecialization()));
-        return trainerResponse;
-    }
+    @Named("trainersListToTrainerResponseList")
+    List<TrainerResponse> trainersListToTrainerResponseList(List<Trainer> trainers);
 
-    public List<TrainerResponse> trainersListToTrainerResponseList(List<Trainer> trainers){
-        return trainers.stream()
-                .map(this::trainerToTrainerResponse)
-                .toList();
-    }
+    @Mapping(target = "username", source = "request.username")
+    @Mapping(target = "firstName", source = "request.firstName")
+    @Mapping(target = "lastName", source = "request.lastName")
+    @Mapping(target = "specialization", source = "trainingType")
+    @Mapping(target = "active", source = "request.active")
+    Trainer updateTrainerRequestToTrainer(UpdateTrainerRequest request, TrainingType trainingType);
 
-    public Trainer updateTrainerRequestToTrainer(UpdateTrainerRequest request){
-        Trainer trainer = new Trainer();
-        trainer.setUsername(request.getUsername());
-        trainer.setFirstName(request.getFirstName());
-        trainer.setLastName(request.getLastName());
-        trainer.setSpecialization(trainingTypeService.getById(request.getSpecializationId()));
-        trainer.setActive(request.isActive());
-        return trainer;
-    }
-
-    public TrainerWorkload trainerToTrainerWorkload(Trainer trainer, Training training, ActionType actionType){
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setTrainerUsername(trainer.getUsername());
-        trainerWorkload.setTrainerFirstName(trainer.getFirstName());
-        trainerWorkload.setTrainerLastName(trainer.getLastName());
-        trainerWorkload.setTrainerActive(trainer.isActive());
-        trainerWorkload.setTrainingDate(training.getTrainingDate());
-        trainerWorkload.setTrainingDurationMinutes(training.getTrainingDurationMinutes());
-        trainerWorkload.setActionType(actionType);
-        return trainerWorkload;
-    }
-
-    public String trainerWorkloadToJson(TrainerWorkload trainerWorkload) {
-        try {
-            return objectMapper.writeValueAsString(trainerWorkload);
-        } catch (Exception e){
-            log.error(e);
-            throw new BusinessLogicException("Serialization error", e);
-        }
-    }
+    @Mapping(target = "trainerUsername", source = "trainer.username")
+    @Mapping(target = "trainerFirstName", source = "trainer.firstName")
+    @Mapping(target = "trainerLastName", source = "trainer.lastName")
+    @Mapping(target = "trainerActive", source = "trainer.active")
+    @Mapping(target = "trainingDate", source = "training.trainingDate")
+    @Mapping(target = "trainingDurationMinutes", source = "training.trainingDurationMinutes")
+    @Mapping(target = "actionType", source = "actionType")
+    TrainerWorkload trainerToTrainerWorkload(Trainer trainer, Training training, ActionType actionType);
 }

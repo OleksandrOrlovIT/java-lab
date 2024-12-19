@@ -71,8 +71,7 @@ class TrainerControllerTest {
         trainerRegister.setLastName("last");
         trainerRegister.setSpecializationId(1L);
 
-        when(trainerMapper.trainerRegisterToTrainer(any())).thenReturn(new Trainer());
-        when(trainerService.create(any())).thenReturn(new Trainer());
+        when(trainerService.createFromTrainerRegister(any())).thenReturn(new Trainer());
         when(trainerMapper.trainerToUsernamePasswordUser(any())).thenReturn(new UsernamePasswordUser());
 
         mockMvc.perform(post("/api/v1/trainer")
@@ -81,8 +80,7 @@ class TrainerControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(trainerMapper, times(1)).trainerRegisterToTrainer(any());
-        verify(trainerService, times(1)).create(any());
+        verify(trainerService, times(1)).createFromTrainerRegister(any());
         verify(trainerMapper, times(1)).trainerToUsernamePasswordUser(any());
     }
 
@@ -112,8 +110,7 @@ class TrainerControllerTest {
         request.setActive(true);
         request.setSpecializationId(1L);
 
-        when(trainerMapper.updateTrainerRequestToTrainer(any())).thenReturn(new Trainer());
-        when(trainerService.update(any())).thenReturn(new Trainer());
+        when(trainerService.updateFromUpdateTrainerRequest(any())).thenReturn(new Trainer());
         when(traineeTrainerMapper.trainerToTrainerFullUsernameResponse(any())).thenReturn(new TrainerFullUsernameResponse());
 
         mockMvc.perform(put("/api/v1/trainer")
@@ -122,8 +119,7 @@ class TrainerControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(trainerMapper, times(1)).updateTrainerRequestToTrainer(any());
-        verify(trainerService, times(1)).update(any());
+        verify(trainerService, times(1)).updateFromUpdateTrainerRequest(any());
         verify(traineeTrainerMapper, times(1)).trainerToTrainerFullUsernameResponse(any());
     }
 

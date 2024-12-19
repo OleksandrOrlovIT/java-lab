@@ -1,6 +1,8 @@
 package ua.orlov.springcoregym.mapper.trainee;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import ua.orlov.springcoregym.dto.trainee.TraineeRegister;
 import ua.orlov.springcoregym.dto.user.UsernamePasswordUser;
 import ua.orlov.springcoregym.model.user.Trainee;
@@ -9,44 +11,32 @@ import ua.orlov.springcoregym.dto.trainee.UpdateTraineeRequest;
 
 import java.util.List;
 
-@Component
-public class TraineeMapper {
+@Mapper(componentModel = "spring")
+public interface TraineeMapper {
 
-    public Trainee traineeRegisterToTrainee(TraineeRegister traineeRegister){
-        return Trainee.builder()
-                .firstName(traineeRegister.getFirstName())
-                .lastName(traineeRegister.getLastName())
-                .dateOfBirth(traineeRegister.getDateOfBirth())
-                .address(traineeRegister.getAddress())
-                .build();
-    }
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
+    @Mapping(target = "address", source = "address")
+    Trainee traineeRegisterToTrainee(TraineeRegister traineeRegister);
 
-    public UsernamePasswordUser traineeToUsernamePasswordUser(Trainee trainee){
-        return new UsernamePasswordUser(trainee.getUsername(), trainee.getPassword());
-    }
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "password", source = "password")
+    UsernamePasswordUser traineeToUsernamePasswordUser(Trainee trainee);
 
-    public Trainee updateTraineeRequestToTrainee(UpdateTraineeRequest request){
-        Trainee trainee = new Trainee();
-        trainee.setUsername(request.getUsername());
-        trainee.setFirstName(request.getFirstName());
-        trainee.setLastName(request.getLastName());
-        trainee.setDateOfBirth(request.getDateOfBirth());
-        trainee.setAddress(request.getAddress());
-        trainee.setActive(request.isActive());
-        return trainee;
-    }
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
+    @Mapping(target = "address", source = "address")
+    @Mapping(target = "active", source = "active")
+    Trainee updateTraineeRequestToTrainee(UpdateTraineeRequest request);
 
-    public TraineeNamesResponse traineeToTraineeNamesResponse(Trainee trainee){
-        TraineeNamesResponse response = new TraineeNamesResponse();
-        response.setUsername(trainee.getUsername());
-        response.setFirstName(trainee.getFirstName());
-        response.setLastName(trainee.getLastName());
-        return response;
-    }
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    TraineeNamesResponse traineeToTraineeNamesResponse(Trainee trainee);
 
-    public List<TraineeNamesResponse> traineeListToTraineeNamesResponseList(List<Trainee> trainees){
-        return trainees.stream()
-                .map(this::traineeToTraineeNamesResponse)
-                .toList();
-    }
+    @Named("traineeListToTraineeNamesResponseList")
+    List<TraineeNamesResponse> traineeListToTraineeNamesResponseList(List<Trainee> trainees);
 }

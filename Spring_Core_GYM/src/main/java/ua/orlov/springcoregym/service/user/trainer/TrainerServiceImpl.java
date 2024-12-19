@@ -8,12 +8,18 @@ import org.springframework.stereotype.Service;
 import ua.orlov.springcoregym.dao.impl.user.UserDao;
 import ua.orlov.springcoregym.dao.impl.user.trainee.TraineeDao;
 import ua.orlov.springcoregym.dao.impl.user.trainer.TrainerDao;
+import ua.orlov.springcoregym.dto.trainer.TrainerRegister;
+import ua.orlov.springcoregym.dto.trainer.UpdateTrainerRequest;
 import ua.orlov.springcoregym.exception.BusinessLogicException;
+import ua.orlov.springcoregym.mapper.trainer.TrainerMapper;
 import ua.orlov.springcoregym.model.training.Training;
+import ua.orlov.springcoregym.model.training.TrainingType;
 import ua.orlov.springcoregym.model.user.Trainee;
 import ua.orlov.springcoregym.model.user.Trainer;
 import ua.orlov.springcoregym.service.password.PasswordService;
 import ua.orlov.springcoregym.model.page.Pageable;
+import ua.orlov.springcoregym.service.training.TrainingTypeService;
+import ua.orlov.springcoregym.service.training.TrainingTypeServiceImpl;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -33,6 +39,10 @@ public class TrainerServiceImpl implements TrainerService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final TrainingTypeService trainingTypeService;
+
+    private final TrainerMapper trainerMapper;
+
     @Transactional
     @Override
     public Trainer update(Trainer trainer) {
@@ -51,6 +61,25 @@ public class TrainerServiceImpl implements TrainerService {
         foundTrainer = getByUserNameWithTrainees(trainer.getUsername());
 
         return foundTrainer;
+    }
+
+    @Transactional
+    @Override
+    public Trainer updateFromUpdateTrainerRequest(UpdateTrainerRequest updateTrainerRequest) {
+        TrainingType trainingType = trainingTypeService.getById(updateTrainerRequest.getSpecializationId());
+
+        return update(trainerMapper.updateTrainerRequestToTrainer(updateTrainerRequest, trainingType));
+    }
+
+    @Override
+    @Transactional
+    public Trainer createFromTrainerRegister(TrainerRegister trainerRegister) {
+        Trainer trainer = trainerMapper.trainerRegisterToTrainer(trainerRegister);
+
+        TrainingType foundType = trainingTypeService.getById(trainerRegister.getSpecializationId());
+        trainer.setSpecialization(foundType);
+
+        return create(trainer);
     }
 
     @Transactional
