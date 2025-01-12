@@ -71,7 +71,7 @@ Feature: Trainee controller
     """
     {
         "username": "testtrainee",
-        "isActive": true,
+        "active": true,
         "firstName": "newValue",
         "lastName": "newValue",
         "address": "newValue",
@@ -88,7 +88,7 @@ Feature: Trainee controller
     """
     {
         "username": "asdasdasd",
-        "isActive": true,
+        "active": true,
         "firstName": "newValue",
         "lastName": "newValue",
         "address": "newValue",
@@ -104,7 +104,7 @@ Feature: Trainee controller
     """
     {
         "username": "updateTrainee",
-        "isActive": true,
+        "active": true,
         "firstName": "newValue",
         "lastName": "newValue",
         "address": "newValue",
@@ -120,7 +120,7 @@ Feature: Trainee controller
         "lastName": "newValue",
         "dateOfBirth": "2020-10-10",
         "address": "newValue",
-        "isActive": true,
+        "active": true,
         "trainers": []
     }
     """
@@ -236,23 +236,23 @@ Feature: Trainee controller
 
   Scenario: Activate deactivate trainee with different logged trainee
     Given the user logs in with username "activatedTrainee" and password "password" to get token
-    When user activate or deactivate trainee with username "testtrainee" and isActive "true"
+    When user activate or deactivate trainee with username "testtrainee" and active "true"
     Then the response status should be 403
     And the exception response body should contain message "Access Denied" and status "FORBIDDEN"
 
   Scenario: Activate deactivate trainee with non existent trainee
     Given the user logs in with username "activatedTrainee" and password "password" to get token
-    When user activate or deactivate trainee with username "asd" and isActive "true"
+    When user activate or deactivate trainee with username "asd" and active "true"
     Then the response status should be 404
     And the exception response body should contain message "User not found with username = asd" and status "NOT_FOUND"
 
-  Scenario: Activate deactivate trainee with same isActive
+  Scenario: Activate deactivate trainee with same active
     Given the user logs in with username "deactivatedTrainee" and password "password" to get token
-    When user activate or deactivate trainee with username "deactivatedTrainee" and isActive "true"
+    When user activate or deactivate trainee with username "deactivatedTrainee" and active "true"
     Then the response status should be 400
     And the response body should contain "Trainee is already active"
 
-  Scenario: Activate deactivate trainee with different isActive
+  Scenario: Activate deactivate trainee with different active
     Given the user logs in with username "activatedTrainee" and password "password" to get token
-    When user activate or deactivate trainee with username "activatedTrainee" and isActive "false"
+    When user activate or deactivate trainee with username "activatedTrainee" and active "false"
     Then the response status should be 200

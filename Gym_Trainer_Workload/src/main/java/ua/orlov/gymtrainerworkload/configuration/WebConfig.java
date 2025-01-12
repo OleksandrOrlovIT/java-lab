@@ -19,16 +19,12 @@ public class WebConfig {
 
     @Bean
     public CloseableHttpClient httpClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        try {
-            return HttpClients
-                    .custom()
-                    .setSSLContext(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
-                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                    .build();
+        return HttpClients
+                .custom()
+                .setSSLContext(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
+                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                .build();
 
-        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-            throw e;
-        }
     }
 
     @Bean

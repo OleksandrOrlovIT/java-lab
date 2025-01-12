@@ -42,7 +42,7 @@ public interface TraineeService {
      *
      * @param trainee the trainee entity to update
      * @return the updated {@link Trainee} entity
-     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the isActive field is changed during update
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the active field is changed during update
      */
     Trainee update(Trainee trainee);
 
@@ -148,7 +148,7 @@ public interface TraineeService {
      * Activates or deactivates a trainee based on the specified status.
      *
      * @param traineeUsername the username of the trainee to update
-     * @param isActive true to activate the trainee; false to deactivate
+     * @param active true to activate the trainee; false to deactivate
      */
-    void activateDeactivateTrainee(String traineeUsername, boolean isActive);
+    void activateDeactivateTrainee(String traineeUsername, boolean active);
 }

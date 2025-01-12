@@ -1,22 +1,20 @@
 package ua.orlov.springcoregym.mapper.trainingtype;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import ua.orlov.springcoregym.dto.trainingtype.TrainingTypeResponse;
 import ua.orlov.springcoregym.model.training.TrainingType;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Component
-public class TrainingTypeMapper {
+@Mapper(componentModel = "spring")
+public interface TrainingTypeMapper {
 
-    public TrainingTypeResponse trainingTypeToTrainingTypeResponse(TrainingType trainingType) {
-        return new TrainingTypeResponse(trainingType.getId(), trainingType.getTrainingTypeName());
-    }
+    @Named("trainingTypeToTrainingTypeResponse")
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "trainingTypeName", source = "trainingTypeName")
+    TrainingTypeResponse trainingTypeToTrainingTypeResponse(TrainingType trainingType);
 
-    public List<TrainingTypeResponse> trainingTypeListToTrainingTypeResponseList(List<TrainingType> trainingTypes) {
-        return trainingTypes.stream()
-                .map(this::trainingTypeToTrainingTypeResponse)
-                .collect(Collectors.toList());
-    }
+    List<TrainingTypeResponse> trainingTypeListToTrainingTypeResponseList(List<TrainingType> trainingTypes);
 }

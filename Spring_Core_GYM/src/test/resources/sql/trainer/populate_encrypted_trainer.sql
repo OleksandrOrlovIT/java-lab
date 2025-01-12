@@ -1,31 +1,31 @@
 INSERT INTO training_type (training_type_name) VALUES ('testTrainingType1');
 SET @training_type_id_1 = (SELECT ID FROM  training_type ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test1', 'Trainer1', 'testtrainer1', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', true);
 SET @trainer_id_1 = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test2', 'Trainer2', 'testtrainer2', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', true);
 SET @trainer_id_2 = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test1', 'Trainer1', 'updateTrainer', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', true);
 SET @updateTrainer_id = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test1', 'Trainer1', 'activatedTrainer', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', true);
 SET @activatedTrainer_id = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test1', 'Trainer1', 'deactivatedTrainer', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', false);
 SET @deactivatedTrainer_id = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test1', 'Trainee2', 'testtrainee1', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', true);
 SET @trainee_id_1 = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test2', 'Trainee2', 'testtrainee2', '$2a$12$ZBHomvuHVeYrC50sdXu.JuO06hh8uuNrIkg73ABvSzEXQZFa3XrhG', true);
 SET @trainee_id_2 = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 

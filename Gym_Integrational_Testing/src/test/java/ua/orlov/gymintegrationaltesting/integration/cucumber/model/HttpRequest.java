@@ -1,4 +1,4 @@
-package ua.orlov.gymintegrationaltesting.model;
+package ua.orlov.gymintegrationaltesting.integration.cucumber.model;
 
 import org.apache.http.client.methods.HttpPost;
 

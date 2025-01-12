@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.orlov.springcoregym.dao.impl.training.TrainingDao;
@@ -68,7 +67,7 @@ public class TrainerDaoImplIT {
                 .lastName(LAST_NAME)
                 .password(PASSWORD)
                 .specialization(testTrainingType)
-                .isActive(IS_ACTIVE)
+                .active(IS_ACTIVE)
                 .build();
     }
 
@@ -133,7 +132,7 @@ public class TrainerDaoImplIT {
                 .firstName(savedTrainer.getFirstName() + delim)
                 .lastName(savedTrainer.getLastName() + delim)
                 .password(savedTrainer.getPassword() + delim)
-                .isActive(!savedTrainer.isActive())
+                .active(!savedTrainer.isActive())
                 .specialization(diffTrainingType)
                 .build();
 

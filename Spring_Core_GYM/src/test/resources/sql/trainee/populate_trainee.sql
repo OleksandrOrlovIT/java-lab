@@ -1,12 +1,12 @@
 INSERT INTO training_type (training_type_name) VALUES ('testTrainingType1');
 SET @training_type_id_1 = (SELECT ID FROM training_type ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test', 'Trainer', 'testtrainer', 'password', true);
 
 SET @trainer_id = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);
 
-INSERT INTO gym_user (first_name, last_name, username, password, is_active)
+INSERT INTO gym_user (first_name, last_name, username, password, active)
 VALUES ('Test', 'Trainee', 'testtrainee', 'password', true);
 
 SET @trainee_id = (SELECT ID FROM gym_user ORDER BY ID DESC LIMIT 1);

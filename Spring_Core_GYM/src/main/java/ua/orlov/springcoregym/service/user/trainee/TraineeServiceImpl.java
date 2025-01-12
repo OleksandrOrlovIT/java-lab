@@ -48,7 +48,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setPassword(foundTrainee.getPassword());
 
         if (foundTrainee.isActive() != trainee.isActive()) {
-            throw new BusinessLogicException("IsActive field can't be changed in update");
+            throw new BusinessLogicException("active field can't be changed in update");
         }
 
         trainee.setTrainings(foundTrainee.getTrainings());
@@ -254,10 +254,10 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Transactional
     @Override
-    public void activateDeactivateTrainee(String traineeUsername, boolean isActive) {
+    public void activateDeactivateTrainee(String traineeUsername, boolean active) {
         Trainee trainee = getByUsername(traineeUsername);
 
-        if(!isActive){
+        if(!active){
             deactivateTrainee(trainee.getId());
         } else {
             activateTrainee(trainee.getId());

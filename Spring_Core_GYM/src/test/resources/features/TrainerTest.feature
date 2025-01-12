@@ -72,7 +72,7 @@ Feature: Trainer controller
     """
     {
         "username": "testtrainer1",
-        "isActive": true,
+        "active": true,
         "firstName": "newValue",
         "lastName": "newValue"
     }
@@ -88,7 +88,7 @@ Feature: Trainer controller
     """
     {
         "username": "asdasdasd",
-        "isActive": true,
+        "active": true,
         "firstName": "newValue",
         "lastName": "newValue"
     }
@@ -103,7 +103,7 @@ Feature: Trainer controller
     """
     {
         "username": "updateTrainer",
-        "isActive": true,
+        "active": true,
         "firstName": "newValue",
         "lastName": "newValue"
     }
@@ -115,7 +115,7 @@ Feature: Trainer controller
         "username": "updateTrainer",
         "firstName": "newValue",
         "lastName": "newValue",
-        "isActive": true,
+        "active": true,
         "trainees": []
     }
     """
@@ -164,23 +164,23 @@ Feature: Trainer controller
 
   Scenario: Activate deactivate trainer with different logged trainer
     Given the user logs in with username "deactivatedTrainer" and password "password" to get token
-    When user activate or deactivate trainer with username "activatedTrainer" and isActive "true"
+    When user activate or deactivate trainer with username "activatedTrainer" and active "true"
     Then the response status should be 403
     And the exception response body should contain message "Access Denied" and status "FORBIDDEN"
 
   Scenario: Activate deactivate trainer with non existent trainer
     Given the user logs in with username "deactivatedTrainer" and password "password" to get token
-    When user activate or deactivate trainer with username "asd" and isActive "true"
+    When user activate or deactivate trainer with username "asd" and active "true"
     Then the response status should be 404
     And the exception response body should contain message "User not found with username = asd" and status "NOT_FOUND"
 
-  Scenario: Activate deactivate trainer with same isActive
+  Scenario: Activate deactivate trainer with same active
     Given the user logs in with username "deactivatedTrainer" and password "password" to get token
-    When user activate or deactivate trainer with username "deactivatedTrainer" and isActive "false"
+    When user activate or deactivate trainer with username "deactivatedTrainer" and active "false"
     Then the response status should be 400
     And the response body should contain "Trainer is already deactivated"
 
-  Scenario: Activate deactivate trainer with different isActive
+  Scenario: Activate deactivate trainer with different active
     Given the user logs in with username "activatedTrainer" and password "password" to get token
-    When user activate or deactivate trainer with username "activatedTrainer" and isActive "false"
+    When user activate or deactivate trainer with username "activatedTrainer" and active "false"
     Then the response status should be 200

@@ -7,7 +7,7 @@ import io.cucumber.java.en.When;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import ua.orlov.gymintegrationaltesting.integration.cucumber.configuration.CucumberSpringConfiguration;
-import ua.orlov.gymintegrationaltesting.model.HttpRequest;
+import ua.orlov.gymintegrationaltesting.integration.cucumber.model.HttpRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

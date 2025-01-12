@@ -22,8 +22,8 @@ public class TrainerFullResponse {
 
     private TrainingTypeResponse specialization;
 
-    @JsonProperty("isActive")
-    private boolean isActive;
+    @JsonProperty("active")
+    private boolean active;
 
     private List<TraineeNamesResponse> trainees;
 }

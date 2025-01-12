@@ -1,7 +1,9 @@
 package ua.orlov.springcoregym.mapper.trainingtype;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.orlov.springcoregym.dto.trainingtype.TrainingTypeResponse;
@@ -14,8 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class TrainingTypeMapperTest {
 
-    @InjectMocks
     private TrainingTypeMapper trainingTypeMapper;
+
+    @BeforeEach
+    void setUp() {
+        trainingTypeMapper = Mappers.getMapper(TrainingTypeMapper.class);
+    }
 
     @Test
     void trainingTypeToTrainingTypeResponseThenSuccess() {

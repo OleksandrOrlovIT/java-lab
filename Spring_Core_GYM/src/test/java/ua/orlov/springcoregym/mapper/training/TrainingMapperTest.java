@@ -1,5 +1,6 @@
 package ua.orlov.springcoregym.mapper.training;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,17 +31,12 @@ class TrainingMapperTest {
     @Mock
     private TrainingTypeMapper trainingTypeMapper;
 
-    @Mock
-    private TraineeService traineeService;
-
-    @Mock
-    private TrainerService trainerService;
-
-    @Mock
-    private TrainingTypeService trainingTypeService;
-
-    @InjectMocks
     private TrainingMapper trainingMapper;
+
+    @BeforeEach
+    void setUp() {
+        trainingMapper = new TrainingMapperImpl(trainingTypeMapper);
+    }
 
     @Test
     void trainingToTrainingFullResponseThenSuccess() {
@@ -113,24 +109,10 @@ class TrainingMapperTest {
         request.setTrainerUsername("Trainer");
         request.setTrainingTypeId(1L);
 
-        when(traineeService.getByUsername(any()))
-                .thenReturn(Trainee.builder().username(request.getTraineeUsername()).build());
-        when(trainerService.getByUsername(any()))
-                .thenReturn(Trainer.builder().username(request.getTrainerUsername()).build());
-        when(trainingTypeService.getById(any()))
-                .thenReturn(TrainingType.builder().id(request.getTrainingTypeId()).build());
-
         Training training = trainingMapper.createTrainingRequestToTraining(request);
         assertNotNull(training);
         assertEquals(request.getTrainingName(), training.getTrainingName());
         assertEquals(request.getTrainingDate(), training.getTrainingDate());
         assertEquals(request.getTrainingDurationMinutes(), training.getTrainingDurationMinutes());
-        assertEquals(request.getTrainerUsername(), training.getTrainer().getUsername());
-        assertEquals(request.getTrainerUsername(), training.getTrainer().getUsername());
-        assertEquals(request.getTrainingTypeId(), training.getTrainingType().getId());
-
-        verify(traineeService, times(1)).getByUsername(any());
-        verify(trainerService, times(1)).getByUsername(any());
-        verify(trainingTypeService, times(1)).getById(any());
     }
 }

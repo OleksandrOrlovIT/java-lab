@@ -42,7 +42,7 @@ public class TrainerController {
     })
     @PostMapping
     public ResponseEntity<UsernamePasswordUser> registerTrainer(@Validated @RequestBody TrainerRegister trainerRegister) {
-        Trainer trainer = trainerService.create(trainerMapper.trainerRegisterToTrainer(trainerRegister));
+        Trainer trainer = trainerService.createFromTrainerRegister(trainerRegister);
 
         UsernamePasswordUser user = trainerMapper.trainerToUsernamePasswordUser(trainer);
         return ResponseEntity.ok(user);
@@ -83,7 +83,7 @@ public class TrainerController {
     @IsSelf
     @PutMapping
     public ResponseEntity<TrainerFullUsernameResponse> updateTrainer(@RequestBody @Validated UpdateTrainerRequest request) {
-        Trainer trainer = trainerService.update(trainerMapper.updateTrainerRequestToTrainer(request));
+        Trainer trainer = trainerService.updateFromUpdateTrainerRequest(request);
 
         return ResponseEntity.ok(traineeTrainerMapper.trainerToTrainerFullUsernameResponse(trainer));
     }

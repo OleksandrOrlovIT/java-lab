@@ -1,36 +1,17 @@
 package ua.orlov.gymtrainerworkload.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
-import ua.orlov.gymtrainerworkload.model.Month;
-import ua.orlov.gymtrainerworkload.model.MonthSummary;
 import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.YearSummary;
 
-import java.util.List;
+@Mapper(componentModel = "spring", uses = {YearMapper.class})
+public interface TrainerMapper {
 
-
-@Component
-public class TrainerMapper {
-
-    public Trainer trainerWorkloadToTrainer(TrainerWorkload trainerWorkload) {
-        Trainer trainer = new Trainer();
-        trainer.setUsername(trainerWorkload.getTrainerUsername());
-        trainer.setFirstName(trainerWorkload.getTrainerFirstName());
-        trainer.setLastName(trainerWorkload.getTrainerLastName());
-        trainer.setStatus(trainerWorkload.isTrainerIsActive());
-
-        MonthSummary monthSummary = new MonthSummary();
-        monthSummary.setMonth(Month.fromOrder(trainerWorkload.getTrainingDate().getMonthValue()));
-        monthSummary.setDurationMinutes(trainerWorkload.getTrainingDurationMinutes());
-
-        YearSummary yearSummary = new YearSummary();
-        yearSummary.setYear(trainerWorkload.getTrainingDate().getYear());
-        yearSummary.setMonths(List.of(monthSummary));
-
-        trainer.setYears(List.of(yearSummary));
-
-        return trainer;
-    }
-
+    @Mapping(target = "username", source = "trainerUsername")
+    @Mapping(target = "firstName", source = "trainerFirstName")
+    @Mapping(target = "lastName", source = "trainerLastName")
+    @Mapping(target = "status", source = "trainerActive")
+    @Mapping(target = "years", source = "trainerWorkload")
+    Trainer trainerWorkloadToTrainer(TrainerWorkload trainerWorkload);
 }

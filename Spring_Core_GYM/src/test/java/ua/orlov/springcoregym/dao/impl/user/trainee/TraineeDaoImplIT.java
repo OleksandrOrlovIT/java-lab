@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.orlov.springcoregym.dao.impl.training.TrainingDao;
@@ -59,7 +58,7 @@ class TraineeDaoImplIT {
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
                 .password(PASSWORD)
-                .isActive(IS_ACTIVE)
+                .active(IS_ACTIVE)
                 .build();
 
         Assertions.assertEquals(1, traineeDao.getAll().size());
@@ -122,7 +121,7 @@ class TraineeDaoImplIT {
                 .firstName(savedTrainee.getFirstName() + delim)
                 .lastName(savedTrainee.getLastName() + delim)
                 .password(savedTrainee.getPassword() + delim)
-                .isActive(!savedTrainee.isActive())
+                .active(!savedTrainee.isActive())
                 .build();
 
         Trainee updated = traineeDao.update(diffTrainee);
