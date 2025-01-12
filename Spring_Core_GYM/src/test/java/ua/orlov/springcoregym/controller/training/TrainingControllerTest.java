@@ -136,8 +136,7 @@ class TrainingControllerTest {
         request.setTraineeUsername("TraineeUsername");
         request.setTrainingDurationMinutes(50);
 
-        when(trainingMapper.createTrainingRequestToTraining(any())).thenReturn(new Training());
-        when(trainingService.create(any())).thenReturn(new Training());
+        when(trainingService.createFromCreateTrainingRequest(any())).thenReturn(new Training());
 
         mockMvc.perform(post("/api/v1/training")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -145,8 +144,7 @@ class TrainingControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(trainingMapper, times(1)).createTrainingRequestToTraining(any());
-        verify(trainingService, times(1)).create(any());
+        verify(trainingService, times(1)).createFromCreateTrainingRequest(any());
     }
 
     @Test

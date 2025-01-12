@@ -1,5 +1,6 @@
 package ua.orlov.springcoregym.service.training;
 
+import ua.orlov.springcoregym.dto.training.CreateTrainingRequest;
 import ua.orlov.springcoregym.dto.training.TraineeTrainingsRequest;
 import ua.orlov.springcoregym.dto.training.TrainerTrainingRequest;
 import ua.orlov.springcoregym.model.training.Training;
@@ -19,6 +20,8 @@ public interface TrainingService {
      * @throws NullPointerException if the training or any of its required fields are null
      */
     Training create(Training training);
+
+    Training createFromCreateTrainingRequest(CreateTrainingRequest createTrainingRequest);
 
     /**
      * Retrieves a {@link Training} entity by its ID.

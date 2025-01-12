@@ -1,50 +1,32 @@
 package ua.orlov.springcoregym.mapper.training;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ua.orlov.springcoregym.dto.training.CreateTrainingRequest;
 import ua.orlov.springcoregym.dto.training.TrainingFullResponse;
 import ua.orlov.springcoregym.mapper.trainingtype.TrainingTypeMapper;
 import ua.orlov.springcoregym.model.training.Training;
-import ua.orlov.springcoregym.service.training.TrainingTypeService;
-import ua.orlov.springcoregym.service.user.trainee.TraineeService;
-import ua.orlov.springcoregym.service.user.trainer.TrainerService;
 
 import java.util.List;
 
-@Component
-@AllArgsConstructor
-public class TrainingMapper {
+@Mapper(componentModel = "spring",
+        uses = {TrainingTypeMapper.class},
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+public interface TrainingMapper {
 
-    private final TrainingTypeMapper trainingTypeMapper;
-    private final TraineeService traineeService;
-    private final TrainerService trainerService;
-    private final TrainingTypeService trainingTypeService;
+    @Mapping(source = "id", target = "trainingId")
+    @Mapping(source = "trainingName", target = "trainingName")
+    @Mapping(source = "trainingDate", target = "trainingDate")
+    @Mapping(source = "trainingType", target = "trainingType", qualifiedByName = "trainingTypeToTrainingTypeResponse")
+    @Mapping(source = "trainingDurationMinutes", target = "trainingDurationMinutes")
+    @Mapping(source = "trainer.username", target = "trainerName")
+    TrainingFullResponse trainingToTrainingFullResponse(Training training);
 
-    public TrainingFullResponse trainingToTrainingFullResponse(Training training) {
-        TrainingFullResponse response = new TrainingFullResponse();
-        response.setTrainingName(training.getTrainingName());
-        response.setTrainingDate(training.getTrainingDate());
-        response.setTrainingType(trainingTypeMapper.trainingTypeToTrainingTypeResponse(training.getTrainingType()));
-        response.setTrainingDurationMinutes(training.getTrainingDurationMinutes());
-        response.setTrainerName(training.getTrainer().getUsername());
-        return response;
-    }
+    List<TrainingFullResponse> trainingListToTrainingFullResponseList(List<Training> trainings);
 
-    public List<TrainingFullResponse> trainingListToTrainingFullResponseList(List<Training> trainings) {
-        return trainings.stream()
-                .map(this::trainingToTrainingFullResponse)
-                .toList();
-    }
-
-    public Training createTrainingRequestToTraining(CreateTrainingRequest request) {
-        Training training = new Training();
-        training.setTrainingName(request.getTrainingName());
-        training.setTrainingDate(request.getTrainingDate());
-        training.setTrainingDurationMinutes(request.getTrainingDurationMinutes());
-        training.setTrainee(traineeService.getByUsername(request.getTraineeUsername()));
-        training.setTrainer(trainerService.getByUsername(request.getTrainerUsername()));
-        training.setTrainingType(trainingTypeService.getById(request.getTrainingTypeId()));
-        return training;
-    }
+    @Mapping(source = "trainingName", target = "trainingName")
+    @Mapping(source = "trainingDate", target = "trainingDate")
+    @Mapping(source = "trainingDurationMinutes", target = "trainingDurationMinutes")
+    Training createTrainingRequestToTraining(CreateTrainingRequest request);
 }

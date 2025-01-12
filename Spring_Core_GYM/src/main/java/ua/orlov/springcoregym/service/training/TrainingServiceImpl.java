@@ -7,12 +7,16 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ua.orlov.springcoregym.dao.impl.training.TrainingDao;
 import ua.orlov.springcoregym.dto.trainer.TrainerWorkload;
+import ua.orlov.springcoregym.dto.training.CreateTrainingRequest;
 import ua.orlov.springcoregym.dto.training.TraineeTrainingsRequest;
 import ua.orlov.springcoregym.dto.training.TrainerTrainingRequest;
 import ua.orlov.springcoregym.mapper.trainer.TrainerMapper;
+import ua.orlov.springcoregym.mapper.training.TrainingMapper;
 import ua.orlov.springcoregym.model.ActionType;
 import ua.orlov.springcoregym.model.training.Training;
 import ua.orlov.springcoregym.service.message.MessageSender;
+import ua.orlov.springcoregym.service.user.trainee.TraineeService;
+import ua.orlov.springcoregym.service.user.trainer.TrainerService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,6 +32,14 @@ public class TrainingServiceImpl implements TrainingService {
     private final MessageSender messageSender;
 
     private final TrainerMapper trainerMapper;
+
+    private final TrainingMapper trainingMapper;
+
+    private final TraineeService traineeService;
+
+    private final TrainerService trainerService;
+
+    private final TrainingTypeService trainingTypeService;
 
     @Override
     @Transactional
@@ -52,6 +64,17 @@ public class TrainingServiceImpl implements TrainingService {
         }
 
         return createdTraining;
+    }
+
+    @Transactional
+    @Override
+    public Training createFromCreateTrainingRequest(CreateTrainingRequest createTrainingRequest) {
+        Training training = trainingMapper.createTrainingRequestToTraining(createTrainingRequest);
+        training.setTrainee(traineeService.getByUsername(createTrainingRequest.getTraineeUsername()));
+        training.setTrainer(trainerService.getByUsername(createTrainingRequest.getTrainerUsername()));
+        training.setTrainingType(trainingTypeService.getById(createTrainingRequest.getTrainingTypeId()));
+
+        return create(training);
     }
 
     @Override

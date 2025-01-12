@@ -1,5 +1,7 @@
 package ua.orlov.springcoregym.service.user.trainer;
 
+import ua.orlov.springcoregym.dto.trainer.TrainerRegister;
+import ua.orlov.springcoregym.dto.trainer.UpdateTrainerRequest;
 import ua.orlov.springcoregym.model.training.Training;
 import ua.orlov.springcoregym.model.user.Trainer;
 import ua.orlov.springcoregym.model.page.Pageable;
@@ -22,6 +24,15 @@ public interface TrainerService {
     Trainer create(Trainer trainer);
 
     /**
+     * Creates a new {@link Trainer} entity.
+     *
+     * @param trainerRegister the trainer entity to create
+     * @return the created {@link Trainer} entity
+     * @throws NullPointerException if required fields are null
+     */
+    Trainer createFromTrainerRegister(TrainerRegister trainerRegister);
+
+    /**
      * Retrieves a {@link Trainer} entity by its ID.
      *
      * @param id the ID of the trainer
@@ -42,9 +53,11 @@ public interface TrainerService {
      *
      * @param trainer the trainer entity to update
      * @return the updated {@link Trainer} entity
-     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the isActive field is changed during the update
+     * @throws ua.orlov.springcoregym.exception.BusinessLogicException if the active field is changed during the update
      */
     Trainer update(Trainer trainer);
+
+    Trainer updateFromUpdateTrainerRequest(UpdateTrainerRequest updateTrainerRequest);
 
     /**
      * Checks if the provided username and password match for a {@link Trainer}.
@@ -135,7 +148,7 @@ public interface TrainerService {
      * Activates or deactivates a trainer based on the specified status.
      *
      * @param trainerUsername the username of the trainer to update
-     * @param isActive true to activate the trainer; false to deactivate
+     * @param active true to activate the trainer; false to deactivate
      */
-    void activateDeactivateTrainer(String trainerUsername, boolean isActive);
+    void activateDeactivateTrainer(String trainerUsername, boolean active);
 }

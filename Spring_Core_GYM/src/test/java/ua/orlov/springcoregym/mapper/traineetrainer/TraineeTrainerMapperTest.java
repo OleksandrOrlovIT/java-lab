@@ -1,5 +1,6 @@
 package ua.orlov.springcoregym.mapper.traineetrainer;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,8 +37,12 @@ class TraineeTrainerMapperTest {
     @Mock
     private TrainingTypeMapper trainingTypeMapper;
 
-    @InjectMocks
     private TraineeTrainerMapper traineeTrainerMapper;
+
+    @BeforeEach
+    void setUp() {
+        traineeTrainerMapper = new TraineeTrainerMapperImpl(trainerMapper, traineeMapper, trainingTypeMapper);
+    }
 
     @Test
     void traineeToTraineeFullResponseThenSuccess() {

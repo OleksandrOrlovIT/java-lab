@@ -1,7 +1,7 @@
 package ua.orlov.springcoregym.dto.trainee;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +28,6 @@ public class UpdateTraineeRequest {
 
     private String address;
 
-    private boolean isActive;
+    @JsonProperty("active")
+    private boolean active;
 }

@@ -3,6 +3,7 @@ package ua.orlov.springcoregym.mapper.trainee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.orlov.springcoregym.dto.trainee.TraineeNamesResponse;
 import ua.orlov.springcoregym.dto.trainee.TraineeRegister;
@@ -22,7 +23,7 @@ class TraineeMapperTest {
 
     @BeforeEach
     void setUp() {
-        traineeMapper = new TraineeMapper();
+        traineeMapper = Mappers.getMapper(TraineeMapper.class);
     }
 
     @Test

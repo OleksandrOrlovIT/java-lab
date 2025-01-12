@@ -22,6 +22,6 @@ docker-compose up --build
 
 <h3>Commands to test application and create jacoco coverage</h2>
 
-mvn clean install verify
+mvn clean verify
 
 

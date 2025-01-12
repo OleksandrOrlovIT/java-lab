@@ -25,8 +25,8 @@ public class TrainerWorkload {
     @NotBlank(message = "trainerLastName is required.")
     private String trainerLastName;
 
-    @NotNull(message = "trainerIsActive is required.")
-    private boolean trainerIsActive;
+    @NotNull(message = "trainerActive is required.")
+    private boolean trainerActive;
 
     @NotNull(message = "trainingDate is required.")
     private LocalDate trainingDate;
