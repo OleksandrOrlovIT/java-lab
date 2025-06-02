@@ -1,93 +1,133 @@
-# java-lab
+# Spring_Core_GYM
 
+**Spring_Core_GYM** is a comprehensive, microservice-based application designed to manage gym operations, streamline user interactions, and track memberships, trainers, and trainee activities. It leverages the Spring Boot ecosystem for robust and scalable services.
 
+## Table of Contents
 
-## Getting started
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+  - [Core Services (Spring_Core_GYM Module)](#core-services-spring_core_gym-module)
+  - [Trainer Workload Service (Gym_Trainer_Workload Module)](#trainer-workload-service-gym_trainer_workload-module)
+  - [Integration Testing (Gym_Integrational_Testing Module)](#integration-testing-gym_integrational_testing-module)
+- [Prerequisites](#prerequisites)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Overview
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+This project provides a backend system for a modern gym. It handles essential functionalities such as user registration, login, profile management for trainees and trainers, membership plan tracking, and workout session logging. The system is designed with a microservice architecture to ensure scalability, maintainability, and independent deployment of its components.
 
-## Add your files
+## Architecture
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+The Spring_Core_GYM application is composed of distinct microservices communicating (potentially asynchronously) to handle different business domains:
 
-```
-cd existing_repo
-git remote add origin https://git.epam.com/oleksandr_orlov/java-lab.git
-git branch -M main
-git push -uf origin main
-```
+1.  **Core Gym Service (`Spring_Core_GYM` module):**
+    * Manages core entities like users (trainees, trainers), memberships, and training types.
+    * Handles user authentication and authorization.
+    * Provides primary API endpoints for front-end interaction.
+    * Integrates with PostgreSQL for persistent storage.
 
-## Integrate with your tools
+2.  **Trainer Workload Service (`Gym_Trainer_Workload` module):**
+    * Manages and tracks the workload of trainers, including training sessions and schedules.
+    * Likely consumes messages (e.g., via AMQP) from the Core Gym Service regarding new training assignments.
+    * Uses MongoDB for storing trainer workload data.
 
-- [ ] [Set up project integrations](https://git.epam.com/oleksandr_orlov/java-lab/-/settings/integrations)
+3.  **Integration Testing (`Gym_Integrational_Testing` module):**
+    * A dedicated module for running integration and end-to-end tests across the microservices, ensuring they interact correctly.
 
-## Collaborate with your team
+## Features
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+* **User Management:** Secure registration and login for trainees and trainers.
+* **Profile Management:** CRUD operations for trainee and trainer profiles.
+* **Membership Tracking:** Management of gym membership plans and user subscriptions.
+* **Trainer Management:** Onboarding and management of trainer details and specializations.
+* **Training Session Logging:** Recording and tracking of training sessions.
+* **Role-Based Security:** Secure access to functionalities based on user roles (e.g., trainee, trainer, admin) using JWT.
+* **API Documentation:** OpenAPI (Swagger) for clear and interactive API documentation.
+* **Monitoring & Metrics:** Health checks and performance metrics via Spring Boot Actuator, with Prometheus integration.
+* **Database Schema Migration:** Managed database schema changes using Liquibase (for PostgreSQL).
+* **Containerization Support:** Docker integration for consistent development and deployment environments.
+* **Asynchronous Communication:** Utilizes message queues (e.g., RabbitMQ via Spring AMQP) for inter-service communication.
+* **Comprehensive Testing:**
+    * Unit tests for individual components.
+    * Integration tests using H2 (for JPA) and Testcontainers (for MongoDB and other services).
+    * Behavior-Driven Development (BDD) with Cucumber.
 
-## Test and Deploy
+## Technology Stack
 
-Use the built-in continuous integration in GitLab.
+This project utilizes a modern Java and Spring-based stack:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**Common Across Modules:**
 
-***
+* **Language:** Java 17
+* **Build Tool:** Apache Maven
+* **Core Framework:** Spring Boot (versions differ slightly per module, generally 3.3.x - 3.4.x)
+* **Testing:**
+    * JUnit 5 (via `spring-boot-starter-test`)
+    * Cucumber (7.20.1) for BDD
+    * Apache HttpClient (4.5.5) for API testing
+* **Utilities:**
+    * Lombok (1.18.36) for boilerplate code reduction
+    * MapStruct (1.6.3) for DTO mapping
 
-# Editing this README
+---
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Core Services (`Spring_Core_GYM` module)
 
-## Suggestions for a good README
+* **Spring Boot Version:** 3.3.4
+* **Web:** Spring MVC (`spring-boot-starter-web`)
+* **Data Persistence:**
+    * Spring Data JPA (`spring-boot-starter-data-jpa`)
+    * **Database:** PostgreSQL (`postgresql` driver 42.7.4)
+    * **Schema Migration:** Liquibase (`liquibase-core`)
+    * **Test Database:** H2 (`h2` 2.3.232)
+* **Security:**
+    * Spring Security (`spring-boot-starter-security`)
+    * JSON Web Tokens (JWT) with `jjwt-api`, `jjwt-impl`, `jjwt-jackson` (0.12.3)
+* **API Documentation:** SpringDoc OpenAPI (`springdoc-openapi-starter-webmvc-ui` 2.6.0)
+* **Monitoring & Metrics:**
+    * Spring Boot Actuator (`spring-boot-starter-actuator`)
+    * Micrometer Core (`micrometer-core`)
+    * Prometheus Registry (`micrometer-registry-prometheus`)
+* **Messaging:** Spring AMQP (`spring-boot-starter-amqp`) for asynchronous communication
+* **Containerization:** Spring Boot Docker Compose (`spring-boot-docker-compose`)
+* **Validation:** Spring Boot Validation (`spring-boot-starter-validation`)
+* **Logging:** Log4j2 (`log4j-api`, `log4j-core`)
+* **Utilities:** Jackson JSR310, Guava (32.0.0-jre)
+* **Code Coverage:** JaCoCo (`jacoco-maven-plugin` 0.8.12)
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+---
 
-## Name
-Choose a self-explaining name for your project.
+### Trainer Workload Service (`Gym_Trainer_Workload` module)
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+* **Spring Boot Version:** 3.3.5
+* **Web:** Spring MVC (`spring-boot-starter-web`)
+* **Data Persistence:**
+    * Spring Data MongoDB (`spring-boot-starter-data-mongodb`)
+* **Messaging:** Spring AMQP (`spring-boot-starter-amqp`)
+* **Validation:** Spring Boot Validation (`spring-boot-starter-validation`)
+* **Testing:**
+    * Testcontainers (`testcontainers` and `mongodb` artifacts, 1.19.0) for MongoDB integration testing.
+* **Code Coverage:** JaCoCo (`jacoco-maven-plugin` 0.8.12)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+---
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Integration Testing (`Gym_Integrational_Testing` module)
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+* **Spring Boot Version (for test context):** 3.4.0
+* **Primary Focus:** End-to-end and integration testing.
+* **Testing Frameworks:**
+    * Cucumber (`cucumber-java`, `cucumber-spring`, `cucumber-junit`, `cucumber-junit-platform-engine`)
+    * Testcontainers (`testcontainers`, `junit-jupiter` artifacts, 1.19.0)
+    * Spring Boot Test utilities, including `spring-boot-starter-web` for test scope (e.g., `TestRestTemplate`).
+* **Build Plugins:** `maven-failsafe-plugin` for running Cucumber integration tests.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Prerequisites
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Before you begin, ensure you have the following installed:
+* JDK 17 or later
+* Apache Maven 3.6.x or later
+* Docker and Docker Compose (for running databases and message brokers, and for containerized deployment)
+* Access to a PostgreSQL instance (or use Docker)
+* Access to a MongoDB instance (or use Docker)
+* Access to a RabbitMQ instance (or other AMQP broker, or use Docker)
